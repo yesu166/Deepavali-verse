@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 
-type Particle = { x:number; y:number; vx:number; vy:number; life:number; maxLife:number; hue:number; size:number }
+type Particle = { x:number; y:number; vx:number; vy:number; life:number; maxLife:number; hue:number; size:number; gravity:number; drag:number }
 type Rocket = { x:number; y:number; targetY:number; hue:number; speed:number }
 const rand = (min:number,max:number) => Math.random()*(max-min)+min
 
-export default function FireworksCanvas({ active = true, interactive = true }: { active?: boolean; interactive?: boolean }) {
+export default function FireworksCanvas({ active = true, interactive = true, hue = -1, pattern = 'bloom' }: { active?: boolean; interactive?: boolean; hue?: number; pattern?: 'bloom'|'willow'|'comet' }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particles = useRef<Particle[]>([])
   const rockets = useRef<Rocket[]>([])
@@ -23,18 +23,18 @@ export default function FireworksCanvas({ active = true, interactive = true }: {
       canvas.style.width = width+'px'; canvas.style.height = height+'px'
       ctx.setTransform(dpr,0,0,dpr,0,0)
     }
-    const burst = (x:number,y:number,hue:number) => {
-      const count = width < 600 ? 36 : 66
+    const burst = (x:number,y:number,burstHue:number,style:'bloom'|'willow'|'comet') => {
+      const count = style==='willow' ? 82 : style==='comet' ? 34 : (width < 600 ? 36 : 66)
       for (let i=0;i<count;i++) {
         const angle = Math.PI*2*i/count + rand(-.08,.08)
-        const speed = rand(1.1,4.2)
-        particles.current.push({ x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:rand(46,90),maxLife:90,hue:hue+rand(-28,28),size:rand(1,2.5) })
+        const speed = style==='willow' ? rand(.65,2.6) : style==='comet' ? rand(2.4,5.8) : rand(1.1,4.2)
+        particles.current.push({ x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:style==='willow'?rand(68,118):rand(46,90),maxLife:style==='willow'?118:90,hue:burstHue+rand(-28,28),size:rand(1,2.5),gravity:style==='willow'?.075:.035,drag:style==='comet'?.995:.989 })
       }
     }
-    const launch = (x:number,y:number) => rockets.current.push({x,y:height+8,targetY:y,hue:rand(25,350),speed:rand(6,9)})
+    const launch = (x:number,y:number,selectedHue=-1) => rockets.current.push({x,y:height+8,targetY:y,hue:selectedHue>=0?selectedHue:rand(25,350),speed:pattern==='comet'?rand(8,11):rand(6,9)})
     const onPointer = (event:PointerEvent) => {
       if (!interactive) return
-      launch(event.clientX, Math.max(90,event.clientY-rand(30,120)))
+      launch(event.clientX, Math.max(90,event.clientY-rand(30,120)),hue)
     }
     const onResize = () => resize()
     resize()
@@ -51,12 +51,12 @@ export default function FireworksCanvas({ active = true, interactive = true }: {
         rocket.y -= rocket.speed
         ctx.fillStyle = `hsla(${rocket.hue},100%,75%,.8)`
         ctx.fillRect(rocket.x,rocket.y,2,7)
-        if (rocket.y <= rocket.targetY) { burst(rocket.x,rocket.y,rocket.hue); return false }
+        if (rocket.y <= rocket.targetY) { burst(rocket.x,rocket.y,rocket.hue,interactive?pattern:'bloom'); return false }
         return true
       })
       particles.current = particles.current.filter(p => p.life > 0)
       for (const p of particles.current) {
-        p.x += p.vx; p.y += p.vy; p.vy += .035; p.vx *= .989; p.vy *= .989; p.life--
+        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= p.drag; p.vy *= p.drag; p.life--
         const alpha = Math.max(0,p.life/p.maxLife)
         ctx.beginPath(); ctx.fillStyle = `hsla(${p.hue},100%,${65+alpha*22}%,${alpha})`
         ctx.shadowBlur = 12; ctx.shadowColor = `hsla(${p.hue},100%,65%,.8)`
@@ -66,6 +66,6 @@ export default function FireworksCanvas({ active = true, interactive = true }: {
     }
     raf = requestAnimationFrame(draw)
     return () => { cancelAnimationFrame(raf); canvas.removeEventListener('pointerdown',onPointer); window.removeEventListener('resize',onResize) }
-  }, [active,interactive])
+  }, [active,interactive,hue,pattern])
   return <canvas ref={canvasRef} className="fireworks-canvas" aria-hidden="true" />
 }
