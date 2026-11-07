@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type SceneId = 'courtyard' | 'rangoli' | 'fireworks' | 'bazaar' | 'lanterns' | 'greetings'
+export type SceneId = 'courtyard' | 'diya' | 'rangoli' | 'fireworks' | 'bazaar' | 'lanterns' | 'greetings'
 type VerseState = {
   scene: SceneId
   litDiyas: number[]
