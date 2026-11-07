@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
-import { ArrowLeft, ArrowRight, Download, Eraser, Flower2, Heart, Send, Sparkles, RotateCcw, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Download, Eraser, Send, RotateCcw, Trophy } from 'lucide-react'
 import { toPng } from 'html-to-image'
 import { useVerseStore } from '../store/useVerseStore'
 import SceneFrame from '../components/SceneFrame'
