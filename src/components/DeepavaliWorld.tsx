@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Flower2, Flame, Gift, Heart, Volume2, VolumeX } from 'lucide-react'
+import { ArrowUpRight, Flower2, Flame, Gift, Heart, Sparkles, Volume2, VolumeX } from 'lucide-react'
 import { useVerseStore, type SceneId } from '../store/useVerseStore'
 import FireworksCanvas from './FireworksCanvas'
 
