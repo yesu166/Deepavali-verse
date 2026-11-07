@@ -248,8 +248,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 :root{--courtyard-art:url("https://d2ol7oe51mr4n9.cloudfront.net/user_3KrUYE2WtgFOq6wOmniZwGJHvVm/aac0ad10-82b2-447b-aa9b-fbe8d31f7298.png")}
 .world-shell{background:#080f20}
 .world-art{background:#080f20}
-.courtyard-backdrop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 54%;transform:scale(1.015);animation:art-arrive 1.2s cubic-bezier(.2,.8,.2,1) both}
-@keyframes art-arrive{from{opacity:.35;transform:scale(1.06)}to{opacity:1;transform:scale(1.015)}}
+ .courtyard-backdrop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 54%;transform:translate3d(var(--parallax-x,0px),var(--parallax-y,0px),0) scale(1.025);transition:transform .55s cubic-bezier(.2,.8,.2,1);animation:art-arrive 1.2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes art-arrive{from{opacity:.35;transform:scale(1.06)}to{opacity:1;transform:translate3d(var(--parallax-x,0px),var(--parallax-y,0px),0) scale(1.025)}}
 .world-image-grade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,10,23,.76) 0%,rgba(5,10,23,.52) 23%,rgba(5,10,23,.08) 54%,rgba(5,10,23,.08) 100%),linear-gradient(180deg,rgba(4,9,20,.48) 0%,transparent 20%,transparent 65%,rgba(5,9,20,.48) 100%)}
 .world-atmosphere{position:absolute;inset:0;background:radial-gradient(ellipse at 48% 52%,transparent 36%,rgba(5,8,19,.26) 100%);mix-blend-mode:multiply}
 .foreground-vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px 20px rgba(3,7,17,.48);pointer-events:none}
