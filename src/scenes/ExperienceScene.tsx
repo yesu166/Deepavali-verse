@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Download, Eraser, Send, RotateCcw, Trophy } from
 import { toPng } from 'html-to-image'
 import { useVerseStore } from '../store/useVerseStore'
 import SceneFrame from '../components/SceneFrame'
+import { ART } from '../assets'
 import FireworksCanvas from '../components/FireworksCanvas'
 
 const palettes = [['#ef4d88','#ffbd42','#24aa91','#5789df','#9e62ce'],['#f27f37','#edbd43','#d84f50','#7e9f48','#ffffff'],['#8e5dc4','#df6dad','#f0c65a','#5a9dcc','#42ad91']]
@@ -13,6 +14,21 @@ const sweets = ['🟠','🍬','🟡','🍥','⭐']
 function BackBar({title,sub}:{title:string;sub:string}) {
  const setScene=useVerseStore(s=>s.setScene)
  return <header className="experience-header"><button className="back-button" onClick={()=>setScene('courtyard')}><ArrowLeft size={17}/> Courtyard</button><div><b>{title}</b><small>{sub}</small></div><span className="header-spark">✦</span></header>
+}
+
+
+function DiyaStudio() {
+ const litDiyas = useVerseStore(s => s.litDiyas)
+ const lightDiya = useVerseStore(s => s.lightDiya)
+ const allLit = litDiyas.length >= 14
+ return <SceneFrame className="experience-scene diya-scene">
+  <BackBar title="Diya Courtyard" sub="One small flame changes everything"/>
+  <div className="diya-studio-art" style={{backgroundImage:'url('+ART.courtyard+')'}}/>
+  <div className="diya-studio-layout">
+   <div className="experience-intro"><span className="eyebrow">A LIGHT YOU CAN LEAVE BEHIND</span><h2>One flame.<br/><em>A thousand ripples.</em></h2><p>Touch a lamp to wake its flame. As the courtyard fills with light, the whole place begins to glow.</p><div className="diya-score"><strong>{String(Math.min(litDiyas.length,14)).padStart(2,'0')}</strong><span>OF 14 DIYAS LIT</span></div></div>
+   <div className="diya-orchard"><div className="diya-orchard-top"><span>THE LAMP GARDEN</span><small>{allLit?'THE COURTYARD IS GLOWING':'CHOOSE A LAMP'}</small></div><div className="diya-grid">{Array.from({length:14},(_,i)=>{const lit=litDiyas.includes(i);return <button key={i} className={'orchard-lamp '+(lit?'lamp-lit':'')} onClick={()=>lightDiya(i)} aria-label={lit?'Diya '+(i+1)+' is lit':'Light diya '+(i+1)}><i className="orchard-flame"/><span className="orchard-bowl"/><small>{String(i+1).padStart(2,'0')}</small></button>})}</div><div className="diya-meter"><i style={{width:Math.min(100,litDiyas.length/14*100)+'%'}}/></div><p>{allLit?'Every corner is glowing. You made this light.':'Your light is joining the evening, one diya at a time.'}</p></div>
+  </div>
+ </SceneFrame>
 }
 
 function RangoliStudio() {
@@ -64,6 +80,7 @@ function GreetingStudio() {
 }
 
 export default function ExperienceScene({scene}:{scene:string}) {
+ if(scene==='diya')return <DiyaStudio/>
  if(scene==='rangoli')return <RangoliStudio/>
  if(scene==='fireworks')return <FireworksStudio/>
  if(scene==='bazaar')return <SweetGame/>
