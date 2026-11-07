@@ -13,7 +13,7 @@ const destinations: {id:SceneId; title:string; subtitle:string; icon: typeof Fla
   {id:'greetings',title:'Greeting Pavilion',subtitle:'Make it personal',icon:ArrowUpRight,className:'hotspot-greetings',x:'83%',y:'72%'},
 ]
 function Diya({id,index,onLight,lit}:{id:number;index:number;onLight:(id:number)=>void;lit:boolean}) {
-  return <button className={\`mini-diya \${lit?'is-lit':''}\`} style={{left:\`\${12+(index%7)*12.5}%\`,top:\`\${88+Math.floor(index/7)*4}%\`}} onClick={()=>onLight(id)} aria-label={lit?'Diya already lit':'Light diya'}>
+  return <button className={`mini-diya ${lit?'is-lit':''}`} style={{left:`${12+(index%7)*12.5}%`,top:`${88+Math.floor(index/7)*4}%`}} onClick={()=>onLight(id)} aria-label={lit?'Diya already lit':'Light diya'}>
     <span className="diya-flame"/><span className="diya-bowl"/>
   </button>
 }
@@ -27,7 +27,7 @@ export default function DeepavaliWorld() {
       <img className="courtyard-backdrop" src={ART.courtyard} alt="" fetchPriority="high" />
       <div className="world-image-grade"/>
       <div className="world-atmosphere"/>
-      {Array.from({length:18},(_,i)=><span key={i} className="star-dust" style={{left:\`\${(i*37)%97}%\`,top:\`\${(i*19)%51}%\`,animationDelay:\`\${i*.37}s\`}}/>)}
+      {Array.from({length:18},(_,i)=><span key={i} className="star-dust" style={{left:`${(i*37)%97}%`,top:`${(i*19)%51}%`,animationDelay:`${i*.37}s`}}/>)}
       <div className="foreground-vignette"/>
     </div>
     <FireworksCanvas active interactive={false} />
@@ -48,14 +48,14 @@ export default function DeepavaliWorld() {
     </div>
     <div className="discovery-note"><span className="discovery-orbit"/><span>Choose a glowing marker to explore</span></div>
     <div className="hotspot-layer">
-      {destinations.map((item,i)=>{const Icon=item.icon;return <motion.button key={item.id} className={\`world-hotspot \${item.className}\`} style={{left:item.x,top:item.y}} onClick={()=>setScene(item.id)} initial={{opacity:0,scale:.8}} animate={{opacity:1,scale:1}} transition={{delay:.55+i*.08,type:'spring',stiffness:150,damping:18}}>
+      {destinations.map((item,i)=>{const Icon=item.icon;return <motion.button key={item.id} className={`world-hotspot ${item.className}`} style={{left:item.x,top:item.y}} onClick={()=>setScene(item.id)} initial={{opacity:0,scale:.8}} animate={{opacity:1,scale:1}} transition={{delay:.55+i*.08,type:'spring',stiffness:150,damping:18}}>
         <span className="hotspot-pulse"/><span className="hotspot-icon"><Icon size={17}/></span><span className="hotspot-label"><b>{item.title}</b><small>{item.subtitle}</small></span>
       </motion.button>})}
       {Array.from({length:14},(_,i)=><Diya key={i} id={i} index={i} onLight={lightDiya} lit={litDiyas.includes(i)}/>)}
     </div>
     <aside className="journey-card">
       <div><span>YOUR FESTIVAL TRAIL</span><b>{String(Math.min(litDiyas.length,14)).padStart(2,'0')} <small>/ 14</small></b></div>
-      <div className="journey-track"><i style={{width:\`\${Math.min(100,litDiyas.length/14*100)}%\`}}/></div>
+      <div className="journey-track"><i style={{width:`${Math.min(100,litDiyas.length/14*100)}%`}}/></div>
       <small>Light a diya to leave your mark.</small>
     </aside>
     <footer className="world-footer"><span>DEEPAVALI · A TIME TO SHINE</span><span>SCROLL LESS. DISCOVER MORE. ✦</span></footer>
