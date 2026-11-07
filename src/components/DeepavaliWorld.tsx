@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Flower2, Flame, Gift, Heart, Music2, Sparkles, Volume2, VolumeX } from 'lucide-react'
+import { ArrowUpRight, Flower2, Flame, Gift, Heart, Volume2, VolumeX } from 'lucide-react'
 import { useVerseStore, type SceneId } from '../store/useVerseStore'
 import FireworksCanvas from './FireworksCanvas'
 
@@ -33,7 +33,7 @@ export default function DeepavaliWorld() {
       <div className="foreground-diya"><span className="big-flame"/><span className="big-bowl"/></div>
       {Array.from({length:18},(_,i)=><span key={i} className="star-dust" style={{left:`${(i*37)%97}%`,top:`${(i*19)%51}%`,animationDelay:`${i*.37}s`}}/>)}
     </div>
-    <FireworksCanvas active />
+    <FireworksCanvas active interactive={false} />
     <header className="world-topbar">
       <button className="brand-lockup" onClick={()=>setScene('courtyard')} aria-label="Return to courtyard"><span className="brand-mark"><Flame size={19}/></span><span>DEEPAVALI <b>VERSE</b></span></button>
       <div className="topbar-right"><span className="festival-status"><i/> THE NIGHT IS ALIVE</span><button className="icon-button" onClick={toggleSound} aria-label={soundEnabled?'Mute sound':'Enable sound'}>{soundEnabled?<Volume2 size={17}/>:<VolumeX size={17}/>}</button></div>
