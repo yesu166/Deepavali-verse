@@ -376,3 +376,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
  .diya-orchard-top small{font-size:6px}
  .rangoli-workshop{background:rgba(17,25,43,.92)}
 }
+
+
+.palette-tabs{display:flex;gap:5px;margin:0 0 8px}
+.palette-tabs button{width:26px;height:9px;border:1px solid rgba(255,255,255,.35);border-radius:999px;opacity:.58;transition:opacity .2s,transform .2s}
+.palette-tabs button.active{opacity:1;transform:scaleY(1.35);box-shadow:0 0 10px rgba(255,218,151,.28)}
+.swatches button{border:2px solid rgba(255,255,255,.24);transition:transform .18s,box-shadow .18s}
+.swatches button.selected{outline:2px solid #f7dda2;outline-offset:3px;transform:scale(1.12);box-shadow:0 0 14px rgba(246,195,103,.38)}
+.rangoli-controls .colour-story{min-width:150px}
