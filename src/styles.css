@@ -384,3 +384,5 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .swatches button{border:2px solid rgba(255,255,255,.24);transition:transform .18s,box-shadow .18s}
 .swatches button.selected{outline:2px solid #f7dda2;outline-offset:3px;transform:scale(1.12);box-shadow:0 0 14px rgba(246,195,103,.38)}
 .rangoli-controls .colour-story{min-width:150px}
+
+.bazaar-art{position:fixed;inset:64px 0 0;z-index:0;background-size:cover;background-position:center 48%;opacity:.34;filter:saturate(1.18)}.bazaar-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,14,29,.93),rgba(8,14,29,.55) 58%,rgba(8,14,29,.75)),linear-gradient(180deg,rgba(8,14,29,.1),rgba(8,14,29,.55))}
