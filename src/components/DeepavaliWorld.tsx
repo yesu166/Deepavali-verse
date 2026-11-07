@@ -22,7 +22,7 @@ export default function DeepavaliWorld() {
   const litDiyas = useVerseStore(s=>s.litDiyas)
   const lightDiya = useVerseStore(s=>s.lightDiya)
   const enterFullscreen = () => { if (!document.fullscreenElement) void document.documentElement.requestFullscreen?.(); else void document.exitFullscreen?.() }
-  return <main className="world-shell">
+  return <main className="world-shell" onPointerMove={event=>{if(event.pointerType==='touch')return;const x=(event.clientX/window.innerWidth-.5)*-9;const y=(event.clientY/window.innerHeight-.5)*-6;event.currentTarget.style.setProperty('--parallax-x',x+'px');event.currentTarget.style.setProperty('--parallax-y',y+'px')}} onPointerLeave={event=>{event.currentTarget.style.setProperty('--parallax-x','0px');event.currentTarget.style.setProperty('--parallax-y','0px')}}>
     <div className="world-art" aria-hidden="true">
       <img className="courtyard-backdrop" src={ART.courtyard} alt="" fetchPriority="high" />
       <div className="world-image-grade"/>
