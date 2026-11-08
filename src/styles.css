@@ -711,3 +711,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
  .terrace-backdrop,.large-lantern,.lantern-releasing{animation:none!important}
  .portal-card,.console-actions>button{transition:none!important}
 }
+
+
+/* Larger, more tactile diya lamps and wish typography controls */
+.diya-grid{gap:17px;padding:38px 10px 28px}
+.orchard-lamp{min-height:102px;border-radius:13px;background:linear-gradient(155deg,rgba(255,227,166,.055),rgba(4,11,27,.28))}
+.orchard-bowl{bottom:30px;width:45px;height:24px;border-width:2px;background:linear-gradient(180deg,#f7c36f,#a04b24);box-shadow:0 4px 13px rgba(244,164,65,.2)}
+.orchard-flame{bottom:49px;width:18px;height:31px;filter:drop-shadow(0 0 11px #ffae49)}
+.orchard-lamp small{bottom:8px;font-size:8px}
+.wish-lettering{display:flex;align-items:center;gap:7px}
+.wish-lettering select{max-width:130px;padding:6px 8px;border:1px solid rgba(232,195,124,.3);border-radius:6px;background:#0b1530;color:#eed9b6;font-size:8px}
+.wish-lettering input{width:65px;accent-color:#d8a14a}
