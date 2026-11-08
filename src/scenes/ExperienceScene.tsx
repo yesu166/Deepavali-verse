@@ -71,14 +71,14 @@ function FireworksStudio() {
  </SceneFrame>
 }
 
-function LanternIllustration({theme=0}:{theme?:number}) {
+function LanternIllustration({theme=0,motif='lotus'}:{theme?:number;motif?:string}) {
  const colours=[['#f8d27a','#9b4b2d','#f7a84f'],['#f8a9cf','#8c2767','#d75d9c'],['#9be0d0','#176e70','#39ad9e'],['#c8b7ff','#543e9b','#8b71d7'],['#ffd6a0','#a54a25','#ed8c42']][theme]
  return <svg className="lantern-svg" viewBox="0 0 240 310" role="img" aria-label="Decorative glowing wish lantern">
   <defs><linearGradient id="lanternPaper" x1="0" y1="0" x2="1" y2="1"><stop stopColor={colours[0]}/><stop offset=".5" stopColor={colours[1]}/><stop offset="1" stopColor={colours[2]}/></linearGradient><radialGradient id="lanternGlow"><stop stopColor="#fff5c7" stopOpacity=".9"/><stop offset="1" stopColor="#ffbd55" stopOpacity="0"/></radialGradient></defs>
   <path d="M120 7v23M88 28q32 17 64 0M96 35l-8 15h64l-8-15" fill="none" stroke={colours[0]} strokeWidth="3"/>
   <path d="M72 53Q120 27 168 53L190 98Q202 155 174 233L120 268 66 233Q38 155 50 98Z" fill="url(#lanternPaper)" stroke={colours[0]} strokeWidth="5"/>
   <path d="M75 55Q120 83 165 55M52 100Q120 125 188 100M49 206Q120 227 191 206M66 233Q120 259 174 233" fill="none" stroke={colours[0]} strokeWidth="2" opacity=".9"/>
-  <path d="M120 69c-28 29-31 64 0 92 31-28 28-63 0-92Z" fill="none" stroke={colours[0]} strokeWidth="3"/>
+  {motif==='lotus'?<path d="M120 69c-28 29-31 64 0 92 31-28 28-63 0-92Z" fill="none" stroke={colours[0]} strokeWidth="3"/>:motif==='mandala'?<g fill="none" stroke={colours[0]} strokeWidth="2"><circle cx="120" cy="150" r="39"/><circle cx="120" cy="150" r="25"/>{Array.from({length:12},(_,i)=><ellipse key={i} cx="120" cy="112" rx="8" ry="21" transform={'rotate('+i*30+' 120 150)'}/>)}</g>:<g fill={colours[0]}>{Array.from({length:9},(_,i)=><path key={i} d="M120 123l7 16 17 2-13 11 4 17-15-9-15 9 4-17-13-11 17-2Z" transform={'translate('+(i%3-1)*34+' '+(Math.floor(i/3)-1)*38+') scale(.55)'}/>)}</g>}
   <path d="M120 91c-14 17-14 32 0 48 14-16 14-31 0-48Z" fill="url(#lanternGlow)"/>
   <path d="M78 148q42-43 84 0-42 44-84 0Z" fill="none" stroke={colours[0]} strokeWidth="2.5"/>
   <path d="M65 183q55-35 110 0-55 38-110 0Z" fill="none" stroke={colours[0]} strokeWidth="2"/>
@@ -95,6 +95,8 @@ function LanternStudio() {
  const [released,setReleased]=useState(false)
  const [theme,setTheme]=useState(0)
  const [motif,setMotif]=useState('lotus')
+ const [wishFont,setWishFont]=useState('Cormorant Garamond')
+ const [wishSize,setWishSize]=useState(12)
  const saveWish=useVerseStore(s=>s.saveWish), wishes=useVerseStore(s=>s.wishes)
  const release=()=>{if(!wish.trim())return;saveWish((sender?'From '+sender+': ':'')+wish.trim());setReleased(true);setWish('');window.setTimeout(()=>setReleased(false),5200)}
  const suggestions=['May our home stay full of laughter.','Health, courage and new beginnings.','A little more kindness for everyone.']
@@ -108,11 +110,12 @@ function LanternStudio() {
      <div className="wish-suggestions">{suggestions.map(v=><button key={v} onClick={()=>setWish(v)}>{v}</button>)}</div>
      <label htmlFor="wish-sender">FROM</label><input id="wish-sender" value={sender} onChange={e=>setSender(e.target.value)} maxLength={30} placeholder="Your name (optional)"/>
      <div className="lantern-customize"><span>COLOUR YOUR LANTERN</span><div>{['#f1b85a','#d65b9a','#35a89e','#8f79db','#eb8652'].map((c,i)=><button key={c} className={theme===i?'selected':''} onClick={()=>setTheme(i)} style={{background:c}} aria-label={'Lantern colour '+(i+1)}/>)}</div></div>
+     <div className="lantern-customize"><span>LETTERING</span><div className="wish-lettering"><select value={wishFont} onChange={e=>setWishFont(e.target.value)}><option>Cormorant Garamond</option><option>DM Sans</option><option>Georgia</option></select><input aria-label="Wish lettering size" type="range" min="9" max="17" value={wishSize} onChange={e=>setWishSize(Number(e.target.value))}/></div></div>
      <div className="lantern-customize"><span>ORNAMENT</span><div className="pattern-pills">{['lotus','mandala','stars'].map(v=><button key={v} className={motif===v?'selected':''} onClick={()=>setMotif(v)}>{v}</button>)}</div></div>
      <button className="gold-action wish-release" disabled={!wish.trim()} onClick={release}><Send size={16}/> Release my lantern</button>
     </div>
    </div>
-   <div className="lantern-preview-column"><div className="lantern-preview-glow"/><div className={'large-lantern '+(released?'lantern-releasing':'')}><LanternIllustration theme={theme}/><div className="lantern-preview-message">{wish||'A little light for the world'}<small>{sender||'A wish from you'}</small></div></div><span className="lantern-preview-caption">YOUR LANTERN · {motif.toUpperCase()} EDITION</span><div className="wish-count">{wishes.length.toString().padStart(2,'0')} wishes kept close</div>{released&&<div className="released-message">Your wish is on its way ✦</div>}</div>
+   <div className="lantern-preview-column"><div className="lantern-preview-glow"/><div className={'large-lantern '+(released?'lantern-releasing':'')}><LanternIllustration theme={theme} motif={motif}/><div className="lantern-preview-message" style={{fontFamily:wishFont,fontSize:wishSize+'px'}}>{wish||'A little light for the world'}<small>{sender||'A wish from you'}</small></div></div><span className="lantern-preview-caption">YOUR LANTERN · {motif.toUpperCase()} EDITION</span><div className="wish-count">{wishes.length.toString().padStart(2,'0')} wishes kept close</div>{released&&<div className="released-message">Your wish is on its way ✦</div>}</div>
   </div>
  </SceneFrame>
 }
