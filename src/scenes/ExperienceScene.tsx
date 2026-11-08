@@ -176,4 +176,19 @@ export default function ExperienceScene({scene}:{scene:string}) {
  if(scene==='lanterns')return <LanternStudio/>
  if(scene==='greetings')return <GreetingStudio/>
  return null
+function SweetGame() {
+ const [running,setRunning]=useState(false)
+ const [seconds,setSeconds]=useState(30)
+ const [basket,setBasket]=useState(50)
+ const [items,setItems]=useState<{id:number;left:number;top:number;icon:string}[]>([])
+ const score=useVerseStore(s=>s.score), addScore=useVerseStore(s=>s.addScore), best=useVerseStore(s=>s.bestScore)
+ useEffect(()=>{if(!running)return;const timer=window.setInterval(()=>setSeconds(s=>{if(s<=1){setRunning(false);return 0}return s-1}),1000);return()=>clearInterval(timer)},[running])
+ useEffect(()=>{if(!running)return;const spawn=window.setInterval(()=>setItems(old=>[...old.filter(i=>i.top<94),{id:Date.now()+Math.random(),left:8+Math.random()*84,top:-8,icon:sweets[Math.floor(Math.random()*sweets.length)]}].slice(-14)),520);const fall=window.setInterval(()=>setItems(old=>old.map(i=>({...i,top:i.top+2.1})).filter(i=>i.top<105)),80);return()=>{clearInterval(spawn);clearInterval(fall)}},[running])
+ useEffect(()=>{if(!running)return;const hits=items.filter(i=>i.top>78&&i.top<96&&Math.abs(i.left-basket)<13);if(hits.length){addScore(hits.length*10);setItems(old=>old.filter(i=>!hits.some(h=>h.id===i.id)))}},[items,basket,running,addScore])
+ const start=()=>{useVerseStore.setState({score:0});setItems([]);setSeconds(30);setRunning(true)}
+ const move=(e:ReactPointerEvent<HTMLDivElement>)=>{const rect=e.currentTarget.getBoundingClientRect();setBasket(Math.max(8,Math.min(92,((e.clientX-rect.left)/rect.width)*100)))}
+ return <SceneFrame className="experience-scene bazaar-scene"><BackBar title="Sweet Bazaar" sub="A tiny game for a sweet evening"/><div className="bazaar-art" style={{backgroundImage:'url('+ART.bazaar+')'}}/><div className="game-layout"><div className="experience-intro"><span className="eyebrow">THE SWEETEST CHALLENGE</span><h2>Laddu<br/><em>Catcher.</em></h2><p>Catch the festival treats before they tumble away. Thirty seconds. Ready?</p><div className="game-stats"><span><Trophy size={15}/> BEST {best}</span><span>✦ SCORE {score}</span><span>◷ {seconds}s</span></div></div><div className="game-board" onPointerMove={move} onPointerDown={move}><div className="bazaar-lights"/><div className="game-stall">SWEET BAZAAR <span>✦ ✦ ✦</span></div>{items.map(item=><span key={item.id} className="falling-sweet" style={{left:item.left+'%',top:item.top+'%'}}>{item.icon}</span>)}<div className="catch-basket" style={{left:basket+'%'}}>╭────────╮<b>✦</b></div>{!running&&<div className="game-overlay"><span className="game-emblem">✦</span><h3>{seconds===0?'Sweet run complete':'Ready for a sweet run?'}</h3><p>{seconds===0?'You collected '+score+' points.':'Move your pointer or finger to guide the basket.'}</p><button className="gold-action" onClick={start}>{seconds===0?'Play again':'Start catching'}</button></div>}</div></div></SceneFrame>
+}
+
+
 }
