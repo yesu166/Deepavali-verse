@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, lazy, Suspense } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { ArrowLeft, ArrowRight, Download, Eraser, Send, RotateCcw, Trophy, Rocket, Sparkles, Layers3, Flame } from 'lucide-react'
 import { toPng } from 'html-to-image'
@@ -6,7 +6,7 @@ import { useVerseStore } from '../store/useVerseStore'
 import SceneFrame from '../components/SceneFrame'
 import { ART } from '../assets'
 import FireworksCanvas, { type LaunchCommand } from '../components/FireworksCanvas'
-import TerraceDepth from '../components/TerraceDepth'
+const TerraceDepth = lazy(() => import('../components/TerraceDepth'))
 
 const palettes = [['#ef4d88','#ffbd42','#24aa91','#5789df','#9e62ce'],['#f27f37','#edbd43','#d84f50','#7e9f48','#ffffff'],['#8e5dc4','#df6dad','#f0c65a','#5a9dcc','#42ad91']]
 const petals = Array.from({length:16},(_,i)=>i)
@@ -54,7 +54,7 @@ function FireworksStudio() {
  return <SceneFrame className="experience-scene fireworks-scene terrace-fireworks-scene">
   <BackBar title="Terrace Fireworks" sub="A clear sky. A terrace full of possibility"/>
   <div className="fireworks-terrace-art" style={{backgroundImage:'url('+ART.terrace+')'}}/>
-  <TerraceDepth/>
+  <Suspense fallback={null}><TerraceDepth/></Suspense>
   <FireworksCanvas active ambient interactive hue={hue} launchRequest={launchRequest}/>
   <div className="fireworks-stage-copy"><span className="eyebrow">THE OPEN SKY IS YOUR CANVAS</span><h2>Make the night<br/><em>come alive.</em></h2><p>Tap the sky for a single shot, or compose a sequence from the launch deck.</p></div>
   <div className="firework-deck">
