@@ -13,6 +13,7 @@ type VerseState = {
   addScore: (points: number) => void
   saveWish: (wish: string) => void
   toggleSound: () => void
+  setSoundEnabled: (enabled: boolean) => void
 }
 const readNumber = (key: string) => {
   try { return Number(localStorage.getItem(key) || 0) } catch { return 0 }
@@ -45,4 +46,5 @@ export const useVerseStore = create<VerseState>((set, get) => ({
     set({ wishes })
   },
   toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+  setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
 }))
