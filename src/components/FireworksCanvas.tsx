@@ -8,10 +8,10 @@ export type LaunchCommand = {
   y?:number
 }
 type Particle={x:number;y:number;vx:number;vy:number;life:number;maxLife:number;hue:number;size:number;gravity:number;drag:number;twinkle:number}
-type Rocket={x:number;y:number;tx:number;ty:number;hue:number;speed:number;kind:LaunchCommand['kind']}
+type Rocket={x:number;y:number;tx:number;ty:number;hue:number;speed:number;kind:LaunchCommand['kind'];style:'bloom'|'willow'|'comet'}
 const rand=(min:number,max:number)=>Math.random()*(max-min)+min
 
-export default function FireworksCanvas({active=true,interactive=true,ambient=false,launchRequest,placementMode=false,onPlace}:{active?:boolean;interactive?:boolean;ambient?:boolean;launchRequest?:LaunchCommand|null;placementMode?:boolean;onPlace?:(x:number,y:number)=>void}) {
+export default function FireworksCanvas({active=true,interactive=true,ambient=false,launchRequest,placementMode=false,pattern='bloom',onPlace}:{active?:boolean;interactive?:boolean;ambient?:boolean;launchRequest?:LaunchCommand|null;placementMode?:boolean;pattern?:'bloom'|'willow'|'comet';onPlace?:(x:number,y:number)=>void}) {
  const canvasRef=useRef<HTMLCanvasElement>(null)
  const particles=useRef<Particle[]>([])
  const rockets=useRef<Rocket[]>([])
@@ -33,9 +33,9 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
    canvas.style.width=width+'px';canvas.style.height=height+'px'
    ctx.setTransform(dpr,0,0,dpr,0,0)
   }
-  const burst=(x:number,y:number,hue:number,kind:LaunchCommand['kind'])=>{
+  const burst=(x:number,y:number,hue:number,kind:LaunchCommand['kind'],style:'bloom'|'willow'|'comet')=>{
    const count=kind==='volley'?95:kind==='battery'?74:kind==='fountain'?46:(mobile?65:110)
-   const shape=kind==='fountain'?'fountain':kind==='battery'?'willow':'bloom'
+   const shape=kind==='fountain'?'fountain':style==='willow'||kind==='battery'?'willow':style==='comet'?'comet':'bloom'
    for(let i=0;i<count&&particles.current.length<maxParticles;i++){
     const angle=shape==='fountain'?rand(-Math.PI*.92,-Math.PI*.08):Math.PI*2*i/count+rand(-.06,.06)
     const speed=shape==='fountain'?rand(1.7,4.4):shape==='willow'?rand(.7,2.5):rand(1.5,4.9)
@@ -43,7 +43,7 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
    }
   }
   const launch=(xRatio:number,yRatio:number,hue:number,kind:LaunchCommand['kind'])=>{
-   rockets.current.push({x:Math.max(12,Math.min(width-12,width*xRatio)),y:height*1.02,tx:width*xRatio,ty:height*yRatio,hue,speed:kind==='fountain'?11:rand(7.2,10.5),kind})
+   rockets.current.push({x:Math.max(12,Math.min(width-12,width*xRatio)),y:height*1.02,tx:width*xRatio,ty:height*yRatio,hue,speed:kind==='fountain'?11:rand(7.2,10.5),kind,style:pattern})
   }
   const trigger=(command:LaunchCommand)=>{
    const x=command.x??rand(.18,.84),y=command.y??rand(.23,.47),hue=command.hue??rand(12,345)
@@ -77,7 +77,7 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
     r.x+=dx/dist*step;r.y+=dy/dist*step
     ctx.beginPath();ctx.strokeStyle='hsla('+r.hue+',100%,75%,.8)';ctx.lineWidth=2
     ctx.moveTo(r.x,r.y+13);ctx.lineTo(r.x,r.y);ctx.stroke()
-    if(dist<r.speed*dt+1){burst(r.tx,r.ty,r.hue,r.kind);return false}
+    if(dist<r.speed*dt+1){burst(r.tx,r.ty,r.hue,r.kind,r.style);return false}
     return true
    })
    particles.current=particles.current.filter(p=>p.life>0)
@@ -93,6 +93,6 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
   }
   raf=requestAnimationFrame(draw)
   return()=>{cancelAnimationFrame(raf);canvas.removeEventListener('pointerdown',onPointer);window.removeEventListener('resize',onResize)}
- },[active,interactive,ambient,launchRequest?.id,placementMode])
+ },[active,interactive,ambient,launchRequest?.id,placementMode,pattern])
  return <canvas ref={canvasRef} className={'fireworks-canvas '+(placementMode?'fireworks-placement':'')} aria-label={placementMode?'Tap the terrace to place a firework battery':undefined}/>
 }
