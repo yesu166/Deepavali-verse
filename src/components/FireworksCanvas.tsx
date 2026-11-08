@@ -11,7 +11,7 @@ type Particle={x:number;y:number;vx:number;vy:number;life:number;maxLife:number;
 type Rocket={x:number;y:number;tx:number;ty:number;hue:number;speed:number;kind:LaunchCommand['kind'];style:'bloom'|'willow'|'comet'}
 const rand=(min:number,max:number)=>Math.random()*(max-min)+min
 
-export default function FireworksCanvas({active=true,interactive=true,ambient=false,launchRequest,placementMode=false,pattern='bloom',onPlace}:{active?:boolean;interactive?:boolean;ambient?:boolean;launchRequest?:LaunchCommand|null;placementMode?:boolean;pattern?:'bloom'|'willow'|'comet';onPlace?:(x:number,y:number)=>void}) {
+export default function FireworksCanvas({active=true,interactive=true,ambient=false,launchRequest,placementMode=false,pattern='bloom',hue=-1,onPlace}:{active?:boolean;interactive?:boolean;ambient?:boolean;launchRequest?:LaunchCommand|null;placementMode?:boolean;hue?:number;pattern?:'bloom'|'willow'|'comet';onPlace?:(x:number,y:number)=>void}) {
  const canvasRef=useRef<HTMLCanvasElement>(null)
  const particles=useRef<Particle[]>([])
  const rockets=useRef<Rocket[]>([])
@@ -59,8 +59,8 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
     const rect=canvas.getBoundingClientRect()
     onPlaceRef.current?.((event.clientX-rect.left)/rect.width,(event.clientY-rect.top)/rect.height)
    }else if(interactive){
-    const hue=rand(12,345)
-    launch(event.clientX/width,Math.max(.16,event.clientY/height-rand(.04,.16)),hue,'sky')
+    const chosenHue=hue>=0?hue:rand(12,345)
+    launch(event.clientX/width,Math.max(.16,event.clientY/height-rand(.04,.16)),chosenHue,'sky')
    }
   }
   const onResize=()=>resize()
@@ -93,6 +93,6 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
   }
   raf=requestAnimationFrame(draw)
   return()=>{cancelAnimationFrame(raf);canvas.removeEventListener('pointerdown',onPointer);window.removeEventListener('resize',onResize)}
- },[active,interactive,ambient,launchRequest?.id,placementMode,pattern])
+ },[active,interactive,ambient,launchRequest?.id,placementMode,pattern,hue])
  return <canvas ref={canvasRef} className={'fireworks-canvas '+(placementMode?'fireworks-placement':'')} aria-label={placementMode?'Tap the terrace to place a firework battery':undefined}/>
 }
