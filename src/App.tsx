@@ -20,23 +20,35 @@ function useMobileLayout() {
 function useFestivalSound() {
  const setEnabled = useVerseStore(s => s.setSoundEnabled)
  useEffect(() => {
-  let started = false
-  const start = () => {
-   if (started) return
-   started = true
-   void soundEngine.enable().then(() => setEnabled(true)).catch(() => setEnabled(false))
-   window.removeEventListener('pointerdown',start)
-   window.removeEventListener('keydown',start)
-   window.removeEventListener('touchstart',start)
+  let unlocked = false
+  const removeUnlockListeners = () => {
+   window.removeEventListener('pointerdown',unlock)
+   window.removeEventListener('keydown',unlock)
+   window.removeEventListener('touchstart',unlock)
   }
-  void soundEngine.enable().then(() => setEnabled(true)).catch(() => setEnabled(false))
-  window.addEventListener('pointerdown',start,{once:true})
-  window.addEventListener('keydown',start,{once:true})
-  window.addEventListener('touchstart',start,{once:true,passive:true})
+  const unlock = () => {
+   if (unlocked) return
+   // Called directly from a real user gesture so mobile browsers can unlock Web Audio.
+   void soundEngine.enable().then(() => {
+    unlocked = true
+    setEnabled(true)
+    removeUnlockListeners()
+   }).catch(() => setEnabled(false))
+  }
+  const resumeIfNeeded = () => {
+   if (document.visibilityState === 'visible' && soundEngine.isEnabled) {
+    void soundEngine.enable().then(() => setEnabled(true)).catch(() => setEnabled(false))
+   }
+  }
+  // Try immediately on browsers that permit autoplay; otherwise the first touch/click unlocks it.
+  void soundEngine.enable().then(() => { unlocked = true; setEnabled(true); removeUnlockListeners() }).catch(() => setEnabled(false))
+  window.addEventListener('pointerdown',unlock)
+  window.addEventListener('keydown',unlock)
+  window.addEventListener('touchstart',unlock,{passive:true})
+  document.addEventListener('visibilitychange',resumeIfNeeded)
   return () => {
-   window.removeEventListener('pointerdown',start)
-   window.removeEventListener('keydown',start)
-   window.removeEventListener('touchstart',start)
+   removeUnlockListeners()
+   document.removeEventListener('visibilitychange',resumeIfNeeded)
   }
  },[setEnabled])
 }
