@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, Sparkles, Volume2, VolumeX, PartyPopper, Target } from 'lucide-react'
+import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, Sparkles, PartyPopper, Target } from 'lucide-react'
 import type { SceneId } from '../store/useVerseStore'
 import { useVerseStore } from '../store/useVerseStore'
 import { ART } from '../assets'
@@ -20,8 +20,6 @@ type Pad={id:number;x:number;y:number}
 export default function DeepavaliWorld(){
  const setScene=useVerseStore(s=>s.setScene)
  const litDiyas=useVerseStore(s=>s.litDiyas)
- const soundEnabled=useVerseStore(s=>s.soundEnabled)
- const toggleSound=useVerseStore(s=>s.toggleSound)
  const [launchRequest,setLaunchRequest]=useState<LaunchCommand|null>(null)
  const [placing,setPlacing]=useState(false)
  const [pads,setPads]=useState<Pad[]>([])
@@ -54,7 +52,7 @@ export default function DeepavaliWorld(){
     <button onClick={()=>setScene('bazaar')}>Play</button>
     <button onClick={()=>setScene('fireworks')}>Celebrate</button>
    </nav>
-   <div className="topbar-right"><button className="icon-button" onClick={toggleSound} aria-label={soundEnabled?'Mute sound':'Sound off'}>{soundEnabled?<Volume2 size={17}/>:<VolumeX size={17}/>}</button><button className="icon-button" onClick={fullscreen} aria-label="Toggle fullscreen"><Maximize2 size={16}/></button></div>
+   <div className="topbar-right"><button className="icon-button" onClick={fullscreen} aria-label="Toggle fullscreen"><Maximize2 size={16}/></button></div>
   </header>
 
   <section className="terrace-hero-copy">
