@@ -934,3 +934,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
  .mobile-verse-destination-icon{width:28px;height:28px;flex-basis:28px}
  .mobile-verse-destination-copy b{font-size:9px}
 }
+
+
+/* Audio is the default festival experience. A quiet pulse only indicates the first-tap unlock. */
+.sound-toggle.sound-awaiting{border-color:rgba(245,209,132,.8);color:#ffe4a5;background:linear-gradient(135deg,rgba(194,133,59,.26),rgba(36,37,55,.78));animation:sound-ready-glint 2.8s ease-in-out infinite}
+@keyframes sound-ready-glint{0%,100%{box-shadow:0 0 0 rgba(230,174,81,0)}50%{box-shadow:0 0 17px rgba(230,174,81,.2)}}
+@media(prefers-reduced-motion:reduce){.sound-toggle.sound-awaiting{animation:none}}
