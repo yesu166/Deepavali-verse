@@ -7,7 +7,8 @@ A cinematic, interactive Deepavali world built with React, TypeScript, CSS, SVG 
 - **Grand Courtyard** — custom illustrated palace environment, subtle pointer parallax, atmospheric particles and six discoverable scene portals.
 - **Diya Courtyard** — light 14 individual lamps; progress persists in the browser.
 - **Rangoli Atelier** — interactive SVG petals, three design geometries, colour palettes, undo/reset and PNG export.
-- **Fireworks Terrace** — Canvas 2D rockets and particle bursts, selectable colours and bloom/willow/comet patterns.
+- **Fireworks Terrace** — Canvas 2D rockets, staggered multi-shot salvos, placeable batteries, and distinct anar, chakri, phooljhadi and ladi cracker effects. Bloom/willow/comet shell styles and colour selection included.
+- **Festival soundscape** — original Web Audio ambience with a tanpura/bansuri-inspired drone, soft bell accents, rocket whistles, aerial booms, anar fizz, chakri spin, phooljhadi sparkle and ladi crackle. Sound is opt-in and mixable with master/ambience sliders plus individual SFX previews.
 - **Sweet Bazaar** — dedicated illustrated market environment and a timed Laddu Catcher game with a local best score.
 - **Lantern Ghat** — write and release a wish; wishes are saved locally.
 - **Greeting Pavilion** — personalised greeting cards, PNG download and WhatsApp sharing.
