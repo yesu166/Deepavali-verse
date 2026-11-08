@@ -1,10 +1,11 @@
 import { useState, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, Sparkles, PartyPopper, Target } from 'lucide-react'
+import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, Sparkles, PartyPopper, Target, Orbit, Zap, Sun } from 'lucide-react'
 import type { SceneId } from '../store/useVerseStore'
 import { useVerseStore } from '../store/useVerseStore'
 import { ART } from '../assets'
 import FireworksCanvas, { type LaunchCommand } from './FireworksCanvas'
+import SoundControl from './SoundControl'
 const TerraceDepth = lazy(() => import('./TerraceDepth'))
 
 const destinations:{id:SceneId;title:string;subtitle:string;icon:typeof Flame;className:string;symbol:string}[]=[
@@ -25,6 +26,7 @@ export default function DeepavaliWorld(){
  const [pads,setPads]=useState<Pad[]>([])
  const [showTools,setShowTools]=useState(true)
  const [hue,setHue]=useState(42)
+ const [pattern,setPattern]=useState<'bloom'|'willow'|'comet'>('bloom')
  const fire=(kind:LaunchCommand['kind'],x=.53,y=.43)=>{
   setLaunchRequest(old=>({id:(old?.id??0)+1,kind,x,y,hue}))
   setPlacing(false)
@@ -43,7 +45,7 @@ export default function DeepavaliWorld(){
    <div className="foreground-vignette"/>
   </div>
   <Suspense fallback={null}><TerraceDepth/></Suspense>
-  <FireworksCanvas active ambient interactive={false} placementMode={placing} onPlace={place} launchRequest={launchRequest}/>
+  <FireworksCanvas active ambient interactive={false} placementMode={placing} onPlace={place} launchRequest={launchRequest} pattern={pattern}/>
   <header className="world-topbar terrace-topbar">
    <button className="brand-lockup" onClick={()=>setScene('courtyard')} aria-label="Deepavali Verse home"><span className="brand-mark"><Flame size={20}/></span><span>DEEPAVALI <b>VERSE</b></span></button>
    <nav className="world-navigation" aria-label="Main navigation">
@@ -52,7 +54,7 @@ export default function DeepavaliWorld(){
     <button onClick={()=>setScene('bazaar')}>Play</button>
     <button onClick={()=>setScene('fireworks')}>Celebrate</button>
    </nav>
-   <div className="topbar-right"><button className="icon-button" onClick={fullscreen} aria-label="Toggle fullscreen"><Maximize2 size={16}/></button></div>
+   <div className="topbar-right"><SoundControl/><button className="icon-button" onClick={fullscreen} aria-label="Toggle fullscreen"><Maximize2 size={16}/></button></div>
   </header>
 
   <section className="terrace-hero-copy">
@@ -64,10 +66,14 @@ export default function DeepavaliWorld(){
   <aside className={'sky-shot-console '+(placing?'console-placement':'')}>
    <div className="console-heading"><span className="console-icon"><Rocket size={16}/></span><div><b>Terrace Fireworks</b><small>{placing?'Tap an open spot to place a battery':'The sky is yours to paint'}</small></div><button onClick={()=>setShowTools(v=>!v)} aria-label="Toggle fireworks controls">{showTools?'−':'+'}</button></div>
    {showTools&&<div className="console-actions">
-    <button onClick={()=>fire('sky')}><Rocket size={16}/><span><b>Sky shot</b><small>One brilliant burst</small></span></button>
-    <button onClick={()=>fire('volley')}><Sparkles size={16}/><span><b>Multi volley</b><small>Five-shot sequence</small></span></button>
-    <button onClick={()=>setPlacing(v=>!v)} className={placing?'is-placing':''}><Target size={16}/><span><b>{placing?'Cancel placement':'Place battery'}</b><small>Choose a launch point</small></span></button>
-    <label className="console-colour"><span>BURST COLOUR</span><div>{[25,42,130,175,210,280,325].map(v=><button key={v} className={hue===v?'chosen':''} onClick={()=>setHue(v)} style={{background:'hsl('+v+',90%,62%)'}} aria-label={'Choose firework colour '+v}/>)}</div></label>
+    <button onClick={()=>fire('sky')}><Rocket size={15}/><span><b>Sky shot</b><small>Single aerial burst</small></span></button>
+    <button onClick={()=>fire('volley')}><Sparkles size={15}/><span><b>Five-shot volley</b><small>Staggered finale</small></span></button>
+    <button onClick={()=>fire('anar',.5,.77)}><Sun size={15}/><span><b>Anar</b><small>Golden spark fountain</small></span></button>
+    <button onClick={()=>fire('chakri',.36,.81)}><Orbit size={15}/><span><b>Chakri</b><small>Spinning ground wheel</small></span></button>
+    <button onClick={()=>fire('phooljhadi',.65,.76)}><Sparkles size={15}/><span><b>Phooljhadi</b><small>Hand-sparkler spray</small></span></button>
+    <button onClick={()=>fire('ladi',.5,.74)}><Zap size={15}/><span><b>Ladi</b><small>Rapid-fire chain</small></span></button>
+    <button onClick={()=>setPlacing(v=>!v)} className={placing?'is-placing':''}><Target size={15}/><span><b>{placing?'Cancel placement':'Place battery'}</b><small>Choose a launch point</small></span></button>
+    <div className="console-colour"><span>BURST COLOUR</span><div>{[25,42,130,175,210,280,325].map(v=><button key={v} className={hue===v?'chosen':''} onClick={()=>setHue(v)} style={{background:'hsl('+v+',90%,62%)'}} aria-label={'Choose firework colour '+v}/>)}</div><label className="console-style"><small>BURST SHAPE</small><select value={pattern} onChange={e=>setPattern(e.target.value as 'bloom'|'willow'|'comet')}><option value="bloom">Bloom</option><option value="willow">Willow</option><option value="comet">Comet</option></select></label></div>
    </div>}
    {pads.length>0&&<div className="placed-pads-list"><span>{pads.length} BATTERIES PLACED</span><button onClick={()=>setPads([])}>Clear</button></div>}
   </aside>
