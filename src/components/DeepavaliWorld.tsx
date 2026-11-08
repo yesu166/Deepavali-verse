@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, Sparkles, Volume2, VolumeX, PartyPopper } from 'lucide-react'
+import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, Sparkles, Volume2, VolumeX, PartyPopper, Target } from 'lucide-react'
 import type { SceneId } from '../store/useVerseStore'
 import { useVerseStore } from '../store/useVerseStore'
 import { ART } from '../assets'
@@ -27,7 +27,6 @@ export default function DeepavaliWorld(){
  const [pads,setPads]=useState<Pad[]>([])
  const [showTools,setShowTools]=useState(true)
  const [hue,setHue]=useState(42)
- const [shotCount,setShotCount]=useState(5)
  const fire=(kind:LaunchCommand['kind'],x=.53,y=.43)=>{
   setLaunchRequest(old=>({id:(old?.id??0)+1,kind,x,y,hue}))
   setPlacing(false)
