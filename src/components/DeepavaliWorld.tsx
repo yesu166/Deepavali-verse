@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, Sparkles, Volume2, VolumeX, PartyPopper, Target } from 'lucide-react'
 import type { SceneId } from '../store/useVerseStore'
 import { useVerseStore } from '../store/useVerseStore'
 import { ART } from '../assets'
 import FireworksCanvas, { type LaunchCommand } from './FireworksCanvas'
-import TerraceDepth from './TerraceDepth'
+const TerraceDepth = lazy(() => import('./TerraceDepth'))
 
 const destinations:{id:SceneId;title:string;subtitle:string;icon:typeof Flame;className:string;symbol:string}[]=[
  {id:'diya',title:'Diya Courtyard',subtitle:'Light the lamps',icon:Flame,className:'portal-diya',symbol:'✦'},
@@ -44,7 +44,7 @@ export default function DeepavaliWorld(){
    <div className="world-image-grade terrace-grade"/>
    <div className="foreground-vignette"/>
   </div>
-  <TerraceDepth/>
+  <Suspense fallback={null}><TerraceDepth/></Suspense>
   <FireworksCanvas active ambient interactive={false} placementMode={placing} onPlace={place} launchRequest={launchRequest}/>
   <header className="world-topbar terrace-topbar">
    <button className="brand-lockup" onClick={()=>setScene('courtyard')} aria-label="Deepavali Verse home"><span className="brand-mark"><Flame size={20}/></span><span>DEEPAVALI <b>VERSE</b></span></button>
