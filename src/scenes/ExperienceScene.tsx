@@ -52,7 +52,7 @@ function FireworksStudio() {
  const [hue,setHue]=useState(42)
  const [pattern,setPattern]=useState<'bloom'|'willow'|'comet'>('bloom')
  const [launchRequest,setLaunchRequest]=useState<LaunchCommand|null>(null)
- const fire=(kind:LaunchCommand['kind'])=>setLaunchRequest(old=>({id:(old?.id??0)+1,kind,hue,x:.52,y:kind==='anar'||kind==='chakri'||kind==='phooljhadi'||kind==='ladi'?.77:.43}))
+ const fire=(kind:LaunchCommand['kind'])=>setLaunchRequest(old=>({id:(old?.id??0)+1,kind,hue,x:.52,y:(kind==='anar'||kind==='chakri'||kind==='phooljhadi'||kind==='ladi')?0.77:0.43}))
  return <SceneFrame className="experience-scene fireworks-scene terrace-fireworks-scene">
   <BackBar title="Terrace Fireworks" sub="A clear sky. A terrace full of possibility"/>
   <div className="fireworks-terrace-art" style={{backgroundImage:'url('+ART.terrace+')'}}/>
