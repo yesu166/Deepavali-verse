@@ -907,3 +907,57 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 @media(prefers-reduced-motion:reduce){
  .cursor-chaser-rocket svg path:nth-last-child(2),.cursor-chaser-rocket svg path:last-child{animation:none}
 }
+
+
+/* Interactive 3D Indian cracker terrace */
+.cracker-map3d{position:absolute;z-index:8;inset:0;overflow:hidden;pointer-events:auto;cursor:default}
+.cracker-map3d canvas{display:block;width:100%;height:100%;outline:0}
+.cracker-map3d.is-placement{cursor:crosshair}
+.cracker-console{top:22%;right:2.4%;width:308px;padding:14px;background:linear-gradient(150deg,rgba(13,19,40,.96),rgba(43,23,43,.94));border-color:rgba(247,202,119,.72);box-shadow:0 16px 42px rgba(2,5,17,.42),inset 0 1px rgba(255,255,255,.1)}
+.cracker-console .console-heading{padding-bottom:9px;border-bottom:1px solid rgba(240,206,144,.15)}
+.cracker-console .console-heading b{font-size:11px}
+.cracker-console .console-heading small{font-size:8px;line-height:1.4}
+.cracker-catalogue{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px 0 9px}
+.cracker-choice{position:relative;display:flex;min-width:0;min-height:58px;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 3px;border:1px solid rgba(236,195,120,.2);border-radius:9px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(10,15,32,.54));color:#f6e4c6;transition:border-color .18s,background .18s,transform .18s,box-shadow .18s}
+.cracker-choice:hover{transform:translateY(-1px);border-color:rgba(255,220,150,.65);background:rgba(221,164,77,.12)}
+.cracker-choice.is-selected{border-color:#ffd47f;background:linear-gradient(145deg,rgba(227,168,77,.25),rgba(83,42,46,.36));box-shadow:inset 0 0 0 1px rgba(255,224,163,.17),0 0 14px rgba(250,184,77,.15)}
+.cracker-choice>span:last-child{display:flex;flex-direction:column;gap:1px;text-align:center;min-width:0}
+.cracker-choice b{font-size:8px;line-height:1.15;color:#fff0d4;font-weight:700;white-space:nowrap}
+.cracker-choice small{font-size:6px;line-height:1.1;color:#cbb891;white-space:nowrap}
+.cracker-thumb{position:relative;display:grid;place-items:center;width:31px;height:27px;color:#f6cd7a;filter:drop-shadow(0 2px 3px rgba(255,169,74,.24))}
+.cracker-thumb b{font-family:Georgia,serif;font-size:19px;line-height:1;color:#f6c979;text-shadow:0 0 10px rgba(255,189,94,.22)}
+.cracker-thumb i{position:absolute;left:50%;top:50%;width:4px;height:17px;transform:translate(-50%,-50%);border-radius:4px;background:linear-gradient(90deg,#b77b39,#fbe0a0,#af6f35);opacity:.82}
+.thumb-rocket b{transform:rotate(-42deg);font-size:23px}
+.thumb-rocket i{height:22px;transform:translate(-50%,-50%) rotate(38deg)}
+.thumb-flower-pot b,.thumb-anar b{font-size:22px}
+.thumb-chakri b{font-size:25px;color:#ef8ebc}
+.thumb-sparkler b,.thumb-phooljhadi b{font-size:24px;color:#ffe9a4}
+.thumb-ladi b,.thumb-1000-wala b{font-size:20px;color:#f27c79}
+.thumb-bijili b{font-size:22px;color:#8fe3ac}
+.thumb-atom-bomb b,.thumb-sutli-bomb b{font-size:24px;color:#86d4b3}
+.thumb-snake-pill b{font-size:28px;color:#c69df4}
+.thumb-multi-shot b{font-size:22px;color:#efa0ad}
+.cracker-colour{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:7px 2px 8px;border-top:1px solid rgba(240,206,144,.14)}
+.cracker-colour>span{align-self:flex-start;margin:0;font-size:7px;white-space:nowrap}
+.cracker-colour>div{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.cracker-colour button{width:14px;height:14px;border:1px solid rgba(255,255,255,.55)}
+.cracker-colour button.chosen{outline:2px solid #ffe0a0;outline-offset:2px}
+.cracker-colour .console-style{display:flex;align-items:center;gap:5px;margin:0}
+.cracker-colour .console-style small{font-size:6px;letter-spacing:.1em;color:#d4bb8e;white-space:nowrap}
+.cracker-colour .console-style select{max-width:76px;padding:5px 6px;font-size:7px}
+.cracker-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cracker-actions button{min-height:36px;border-radius:8px;font-size:8px;font-weight:700;transition:transform .18s,filter .18s}
+.cracker-actions button:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.cracker-place-action{border:1px solid rgba(247,207,131,.66);background:linear-gradient(135deg,#dba653,#a66b37);color:#241823}
+.cracker-fire-action{border:1px solid rgba(255,222,153,.42);background:rgba(247,209,133,.09);color:#ffe0a2}
+.cracker-model-hint{display:flex;align-items:center;gap:6px;margin-top:8px;color:#bca984;font-size:7px;letter-spacing:.025em}
+.cracker-model-hint .live-dot{width:5px;height:5px;flex:none;border-radius:50%;background:#66d4a1;box-shadow:0 0 8px #66d4a1}
+.cracker-console .placed-pads-list{padding-top:8px;margin-top:8px}
+.placement-hint{top:64%;font-size:9px;z-index:29;backdrop-filter:blur(12px)}
+@media(max-width:1050px) and (min-width:761px){
+ .cracker-console{width:278px;right:1.5%;top:21%;padding:11px}
+ .cracker-choice{min-height:54px}.cracker-choice b{font-size:7px}.cracker-choice small{font-size:5.5px}
+}
+@media(max-width:760px){
+ .cracker-map3d{display:none}
+}
