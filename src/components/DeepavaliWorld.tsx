@@ -39,7 +39,7 @@ export default function DeepavaliWorld(){
  }
  const fullscreen=()=>{if(!document.fullscreenElement)void document.documentElement.requestFullscreen?.();else void document.exitFullscreen?.()}
  const complete=Math.min(6,[litDiyas.length>=14, pads.length>=1, false, false, false, false].filter(Boolean).length)
- return <main className="world-shell terrace-world" onPointerMove={e=>{if(e.pointerType==='touch')return;setCursor({x:e.clientX,y:e.clientY,visible:true})}} onPointerLeave={()=>setCursor(v=>({...v,visible:false}))} onClick={e=>{if(window.matchMedia('(max-width: 760px)').matches)return;const target=e.target as HTMLElement;if(target.closest('button,a,input,select,textarea,[role=button]'))return;const x=Math.max(.06,Math.min(.94,e.clientX/window.innerWidth));const y=Math.max(.12,Math.min(.7,e.clientY/window.innerHeight));fire('sky',x,y)}}>
+ return <main className="world-shell terrace-world" onClick={e=>{if(window.matchMedia('(max-width: 760px)').matches)return;const target=e.target as HTMLElement;if(target.closest('button,a,input,select,textarea,[role=button]'))return;const x=Math.max(.06,Math.min(.94,e.clientX/window.innerWidth));const y=Math.max(.12,Math.min(.7,e.clientY/window.innerHeight));fire('sky',x,y)}}>
   <div className="world-art" aria-hidden="true">
    <img className="courtyard-backdrop terrace-backdrop" src={ART.terrace} alt="" fetchPriority="high"/>
    <div className="world-image-grade terrace-grade"/>
