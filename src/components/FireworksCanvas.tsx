@@ -102,7 +102,7 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
    for(const action of due){
     if(action.mode==='burst'){
      burst(action.x*width,action.y*height,action.hue,action.kind,config.current.pattern)
-     if(action.kind==='anar'||action.kind==='fountain'||action.kind==='chakri'||action.kind==='phooljhadi')soundEngine.play(action.kind==='fountain'||action.kind==='flower-pot'?'anar':action.kind==='sparkler'?'phooljhadi':action.kind as 'anar'|'chakri'|'phooljhadi')
+     if(action.kind==='anar'||action.kind==='fountain'||action.kind==='chakri'||action.kind==='phooljhadi')soundEngine.play(action.kind==='fountain'?'anar':action.kind as 'anar'|'chakri'|'phooljhadi')
     }else launch(action.x,action.y,action.hue,action.kind)
    }
    rockets.current=rockets.current.filter(r=>{
@@ -116,7 +116,7 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
     if(dist<r.speed*dt+1){
      burst(r.tx,r.ty,r.hue,r.kind,r.style)
      if(r.kind==='ladi')soundEngine.play('ladi')
-     else soundEngine.play(r.kind==='anar'||r.kind==='fountain'||r.kind==='flower-pot'?'anar':r.kind==='chakri'||r.kind==='snake-pill'?'chakri':r.kind==='phooljhadi'||r.kind==='sparkler'?'phooljhadi':r.kind==='ladi'||r.kind==='1000-wala'||r.kind==='bijili'?'ladi':'burst')
+     else soundEngine.play(r.kind==='anar'||r.kind==='fountain'||r.kind==='flower-pot'?'anar':r.kind==='chakri'||r.kind==='snake-pill'?'chakri':r.kind==='phooljhadi'||r.kind==='sparkler'?'phooljhadi':r.kind==='1000-wala'||r.kind==='bijili'?'ladi':'burst')
      return false
     }
     return true
