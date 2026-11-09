@@ -126,7 +126,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     const root=host.current;if(!root)return
     const mobile=window.matchMedia('(max-width:760px)').matches
     let renderer:THREE.WebGLRenderer
-    try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:!mobile,powerPreference:'low-power'})}catch{return}
+    try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:!mobile,powerPreference:'low-power',preserveDrawingBuffer:true})}catch{return}
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,mobile?1:1.35))
     renderer.outputColorSpace=THREE.SRGBColorSpace
     renderer.toneMapping=THREE.ACESFilmicToneMapping
@@ -136,6 +136,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     const scene=new THREE.Scene();sceneRef.current=scene
     const camera=new THREE.PerspectiveCamera(38,root.clientWidth/Math.max(1,root.clientHeight),.1,70);camera.position.set(0,8.5,15);camera.lookAt(0,2.35,0);cameraRef.current=camera
     scene.add(new THREE.HemisphereLight(0xfff1d3,0x1b2840,1.65))
+    const debugOrb=new THREE.Mesh(new THREE.SphereGeometry(.48,20,16),new THREE.MeshBasicMaterial({color:0xff00ff}));debugOrb.position.set(0,.9,0);scene.add(debugOrb)
     const key=new THREE.DirectionalLight(0xffdfaa,2);key.position.set(-4,8,5);scene.add(key)
     const goldLight=new THREE.PointLight(0xffa64d,18,20);goldLight.position.set(1,3,2);scene.add(goldLight)
     const plane=new THREE.Mesh(new THREE.PlaneGeometry(13,7.4),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}))
