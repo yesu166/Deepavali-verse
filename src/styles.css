@@ -961,3 +961,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 @media(max-width:760px){
  .cracker-map3d{display:none}
 }
+
+/* Placement helper floats above the scene but never blocks the floor hit target. */
+.placement-hint{pointer-events:none}
+.placement-hint button{pointer-events:auto}
