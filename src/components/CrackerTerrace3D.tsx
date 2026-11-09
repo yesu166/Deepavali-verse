@@ -6,6 +6,7 @@ export type PlacedCracker = { id:number; kind:IndianCracker; x:number; z:number;
 type Props = {
   placements:PlacedCracker[]
   placementMode:boolean
+  selected:IndianCracker
   onPlace:(x:number,z:number)=>void
   onIgnite:(kind:IndianCracker,x:number,y:number,hue:number)=>void
   onSky:(x:number,y:number)=>void
@@ -82,12 +83,13 @@ function model(kind:IndianCracker):THREE.Group{
   return g
 }
 
-export default function CrackerTerrace3D({placements,placementMode,onPlace,onIgnite,onSky}:Props){
+export default function CrackerTerrace3D({placements,placementMode,selected,onPlace,onIgnite,onSky}:Props){
   const host=useRef<HTMLDivElement>(null)
   const sceneRef=useRef<THREE.Scene|null>(null)
   const cameraRef=useRef<THREE.PerspectiveCamera|null>(null)
   const layerRef=useRef<THREE.Group|null>(null)
   const objectsRef=useRef(new Map<number,THREE.Group>())
+  const previewRef=useRef<THREE.Group|null>(null)
   const callbacks=useRef({placements,placementMode,onPlace,onIgnite,onSky})
   callbacks.current={placements,placementMode,onPlace,onIgnite,onSky}
 
@@ -107,6 +109,7 @@ export default function CrackerTerrace3D({placements,placementMode,onPlace,onIgn
     const plane=new THREE.Mesh(new THREE.PlaneGeometry(13,7.4),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}))
     plane.rotation.x=-Math.PI/2;plane.position.y=.005;scene.add(plane);plane.userData.placementPlane=true
     const layer=new THREE.Group();scene.add(layer);layerRef.current=layer
+    const preview=new THREE.Group();preview.position.set(0,.035,0);scene.add(preview);previewRef.current=preview
     const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2()
     let raf=0,last=0,targetX=0,targetY=0
     const resize=()=>{const w=root.clientWidth,h=root.clientHeight;camera.aspect=w/Math.max(1,h);camera.updateProjectionMatrix();renderer.setSize(w,h);renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,mobile?1:1.35))}
@@ -136,17 +139,19 @@ export default function CrackerTerrace3D({placements,placementMode,onPlace,onIgn
     const animate=()=>{raf=requestAnimationFrame(animate);const t=clock.getElapsedTime();camera.position.x+=(targetX*.22-camera.position.x)*.025;camera.position.y+=(8.5+targetY*.1-camera.position.y)*.025;camera.lookAt(0,.15,0);for(const [id,g] of objectsRef.current){if(g.userData.kind==='chakri')g.rotation.y=t*1.35;g.position.y=.026+Math.sin(t*1.5+id)*.012}if(t-last>.025){renderer.render(scene,camera);last=t}}
     animate()
     const ro=new ResizeObserver(resize);ro.observe(root)
-    return()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);window.removeEventListener('resize',resize);for(const g of objectsRef.current.values())g.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const m=o.material;if(Array.isArray(m))m.forEach(x=>x.dispose());else m.dispose()}});scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const m=o.material;if(Array.isArray(m))m.forEach(x=>x.dispose());else m.dispose()}});renderer.dispose();renderer.domElement.remove();sceneRef.current=null;cameraRef.current=null;layerRef.current=null;objectsRef.current.clear()}
+    return()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);window.removeEventListener('resize',resize);for(const g of objectsRef.current.values())g.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const m=o.material;if(Array.isArray(m))m.forEach(x=>x.dispose());else m.dispose()}});scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const m=o.material;if(Array.isArray(m))m.forEach(x=>x.dispose());else m.dispose()}});renderer.dispose();renderer.domElement.remove();sceneRef.current=null;cameraRef.current=null;layerRef.current=null;previewRef.current=null;objectsRef.current.clear()}
   },[])
 
   useEffect(()=>{
+    const preview=previewRef.current
+    if(preview){preview.clear();const ghost=model(selected);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.MeshStandardMaterial;o.material=source.clone();const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.72;material.depthWrite=false}});preview.add(ghost);preview.visible=placements.length===0}
     const layer=layerRef.current;if(!layer)return
     layer.clear();objectsRef.current.clear()
     for(const p of placements){
       const g=model(p.kind);g.position.set(p.x,.03,p.z);g.rotation.y=(p.id%7)*.27;g.userData.crackerId=p.id
       layer.add(g);objectsRef.current.set(p.id,g)
     }
-  },[placements])
+  },[placements,selected])
 
-  return <div ref={host} className={'cracker-map3d '+(placementMode?'is-placement':'')} aria-label="Interactive 3D cracker terrace"/>
+  return <div ref={host} className={'cracker-map3d '+(placementMode?'is-placement':'')} aria-label={placementMode?'Choose a place on the 3D terrace':'3D cracker models. Click a placed cracker to ignite it.'}/>
 }
