@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 /** Desktop-only guided cursor. The light tracks the pointer directly; the rocket eases behind it. */
 export default function RocketCursor() {
   const dotRef = useRef<HTMLDivElement>(null)
   const rocketRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 761px)').matches) return
     let raf = 0, visible = false
     let x = -100, y = -100, rocketX = -136, rocketY = -100
