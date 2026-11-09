@@ -133,7 +133,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     renderer.setSize(root.clientWidth,root.clientHeight);renderer.setClearColor(0,0)
     root.appendChild(renderer.domElement)
     const scene=new THREE.Scene();sceneRef.current=scene
-    const camera=new THREE.PerspectiveCamera(38,root.clientWidth/Math.max(1,root.clientHeight),.1,70);camera.position.set(0,8.5,15);camera.lookAt(0,.15,0);cameraRef.current=camera
+    const camera=new THREE.PerspectiveCamera(38,root.clientWidth/Math.max(1,root.clientHeight),.1,70);camera.position.set(0,8.5,15);camera.lookAt(0,2.35,0);cameraRef.current=camera
     scene.add(new THREE.HemisphereLight(0xfff1d3,0x1b2840,1.65))
     const key=new THREE.DirectionalLight(0xffdfaa,2);key.position.set(-4,8,5);scene.add(key)
     const goldLight=new THREE.PointLight(0xffa64d,18,20);goldLight.position.set(1,3,2);scene.add(goldLight)
@@ -167,7 +167,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     renderer.domElement.addEventListener('pointermove',move,{passive:true})
     window.addEventListener('resize',resize)
     const clock=new THREE.Clock()
-    const animate=()=>{raf=requestAnimationFrame(animate);const t=clock.getElapsedTime();camera.position.x+=(targetX*.22-camera.position.x)*.025;camera.position.y+=(8.5+targetY*.1-camera.position.y)*.025;camera.lookAt(0,.15,0);for(const [id,g] of objectsRef.current){if(g.userData.kind==='chakri')g.rotation.y=t*1.35;g.position.y=.026+Math.sin(t*1.5+id)*.012}if(t-last>.025){renderer.render(scene,camera);last=t}}
+    const animate=()=>{raf=requestAnimationFrame(animate);const t=clock.getElapsedTime();camera.position.x+=(targetX*.22-camera.position.x)*.025;camera.position.y+=(8.5+targetY*.1-camera.position.y)*.025;camera.lookAt(0,2.35,0);for(const [id,g] of objectsRef.current){if(g.userData.kind==='chakri')g.rotation.y=t*1.35;g.position.y=.026+Math.sin(t*1.5+id)*.012}if(t-last>.025){renderer.render(scene,camera);last=t}}
     animate()
     const ro=new ResizeObserver(resize);ro.observe(root)
     return()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);window.removeEventListener('resize',resize);disposeTree(scene);renderer.dispose();renderer.domElement.remove();sceneRef.current=null;cameraRef.current=null;layerRef.current=null;previewRef.current=null;objectsRef.current.clear()}
