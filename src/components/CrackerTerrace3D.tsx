@@ -114,6 +114,7 @@ function model(kind:IndianCracker):THREE.Group{
 export default function CrackerTerrace3D({placements,placementMode,selected,onPlace,onIgnite,onSky}:Props){
   const host=useRef<HTMLDivElement>(null)
   const sceneRef=useRef<THREE.Scene|null>(null)
+  const rendererRef=useRef<THREE.WebGLRenderer|null>(null)
   const cameraRef=useRef<THREE.PerspectiveCamera|null>(null)
   const layerRef=useRef<THREE.Group|null>(null)
   const objectsRef=useRef(new Map<number,THREE.Group>())
@@ -131,7 +132,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     renderer.toneMapping=THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure=1.12
     renderer.setSize(root.clientWidth,root.clientHeight);renderer.setClearColor(0,0)
-    root.appendChild(renderer.domElement)
+    root.appendChild(renderer.domElement);rendererRef.current=renderer
     const scene=new THREE.Scene();sceneRef.current=scene
     const camera=new THREE.PerspectiveCamera(38,root.clientWidth/Math.max(1,root.clientHeight),.1,70);camera.position.set(0,8.5,15);camera.lookAt(0,2.35,0);cameraRef.current=camera
     scene.add(new THREE.HemisphereLight(0xfff1d3,0x1b2840,1.65))
@@ -170,7 +171,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     const animate=()=>{raf=requestAnimationFrame(animate);const t=clock.getElapsedTime();camera.position.x+=(targetX*.22-camera.position.x)*.025;camera.position.y+=(8.5+targetY*.1-camera.position.y)*.025;camera.lookAt(0,2.35,0);for(const [id,g] of objectsRef.current){if(g.userData.kind==='chakri')g.rotation.y=t*1.35;g.position.y=.026+Math.sin(t*1.5+id)*.012}if(t-last>.025){renderer.render(scene,camera);last=t}}
     animate()
     const ro=new ResizeObserver(resize);ro.observe(root)
-    return()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);window.removeEventListener('resize',resize);disposeTree(scene);renderer.dispose();renderer.domElement.remove();sceneRef.current=null;cameraRef.current=null;layerRef.current=null;previewRef.current=null;objectsRef.current.clear()}
+    return()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);window.removeEventListener('resize',resize);disposeTree(scene);renderer.dispose();renderer.domElement.remove();sceneRef.current=null;rendererRef.current=null;cameraRef.current=null;layerRef.current=null;previewRef.current=null;objectsRef.current.clear()}
   },[])
 
   useEffect(()=>{
@@ -182,6 +183,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
       const g=model(p.kind);g.position.set(p.x,.03,p.z);g.rotation.y=(p.id%7)*.27;g.userData.crackerId=p.id
       layer.add(g);objectsRef.current.set(p.id,g)
     }
+    if(sceneRef.current&&cameraRef.current&&rendererRef.current)rendererRef.current.render(sceneRef.current,cameraRef.current)
   },[placements,selected])
 
   return <div ref={host} className={'cracker-map3d '+(placementMode?'is-placement':'')} aria-label={placementMode?'Choose a place on the 3D terrace':'3D cracker models. Click a placed cracker to ignite it.'}/>
