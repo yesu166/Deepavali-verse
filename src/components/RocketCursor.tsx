@@ -27,7 +27,7 @@ export default function RocketCursor() {
       const dx = x - previousX, dy = y - previousY, distance = Math.hypot(dx, dy)
       if (distance > .6) { const blend = Math.min(.42, .14 + distance * .012); velocityX += (dx - velocityX) * blend; velocityY += (dy - velocityY) * blend }
       previousX = x; previousY = y
-      if (dotRef.current) dotRef.current.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)'
+      if (dotRef.current) dotRef.current.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-50%)'
       show()
     }
     const animate = (time: number) => {
@@ -42,7 +42,7 @@ export default function RocketCursor() {
         const aimX = x - rocketX, aimY = y - rocketY
         if (Math.hypot(aimX, aimY) > 1) angle = Math.atan2(aimY, aimX) * 180 / Math.PI + 90
       } else { rocketX += (x - rocketX) * .035; rocketY += (y - rocketY) * .035 }
-      if (rocketRef.current) rocketRef.current.style.transform = 'translate3d(' + rocketX + 'px,' + rocketY + 'px,0) rotate(' + angle + 'deg)'
+      if (rocketRef.current) rocketRef.current.style.transform = 'translate3d(' + rocketX + 'px,' + rocketY + 'px,0) translate(-50%,-50%) rotate(' + angle + 'deg)'
       raf = requestAnimationFrame(animate)
     }
     window.addEventListener('pointermove', move, { passive: true })
