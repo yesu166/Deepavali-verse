@@ -176,7 +176,7 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
 
   useEffect(()=>{
     const preview=previewRef.current
-    if(preview){preview.children.forEach(disposeTree);preview.clear();const ghost=model(selected);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.MeshStandardMaterial;o.material=source.clone();const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.9;material.depthWrite=false}});preview.add(ghost);preview.visible=true;const root=host.current;if(root){root.dataset.previewVisible=String(preview.visible);root.dataset.previewMeshes=String(ghost.children.length);root.dataset.previewKind=selected}}
+    if(preview){preview.children.forEach(disposeTree);preview.clear();const ghost=model(selected);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.MeshStandardMaterial;o.material=source.clone();const material=o.material as THREE.MeshStandardMaterial;material.transparent=false;material.opacity=1;material.depthWrite=true}});ghost.scale.setScalar(1.18);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const m=o.material as THREE.MeshStandardMaterial;if('emissive' in m)m.emissive.setHex(0x160a06);}});preview.add(ghost);preview.visible=true;const root=host.current;if(root){root.dataset.previewVisible=String(preview.visible);root.dataset.previewMeshes=String(ghost.children.length);root.dataset.previewKind=selected}}
     const layer=layerRef.current;if(!layer)return
     layer.children.forEach(disposeTree);layer.clear();objectsRef.current.clear()
     for(const p of placements){
