@@ -7,7 +7,8 @@ import { ART } from '../assets'
 import FireworksCanvas, { type LaunchCommand } from './FireworksCanvas'
 import SoundControl from './SoundControl'
 import RocketCursor from './RocketCursor'
-import CrackerTerrace3D, { type IndianCracker, type PlacedCracker } from './CrackerTerrace3D'
+import type { IndianCracker, PlacedCracker } from './CrackerTerrace3D'
+const CrackerTerrace3D = lazy(() => import('./CrackerTerrace3D'))
 const TerraceDepth = lazy(() => import('./TerraceDepth'))
 
 const destinations:{id:SceneId;title:string;subtitle:string;icon:typeof Flame;className:string;symbol:string}[]=[
@@ -72,7 +73,7 @@ export default function DeepavaliWorld(){
   <Suspense fallback={null}><TerraceDepth/></Suspense>
   <RocketCursor/>
   <FireworksCanvas active ambient interactive={false} launchRequest={launchRequest} pattern={pattern}/>
-  <CrackerTerrace3D placements={pads} selected={selectedCracker} placementMode={placing} onPlace={place} onIgnite={ignite} onSky={fireSky}/>
+  <Suspense fallback={null}><CrackerTerrace3D placements={pads} selected={selectedCracker} placementMode={placing} onPlace={place} onIgnite={ignite} onSky={fireSky}/></Suspense>
   <header className="world-topbar terrace-topbar">
    <button className="brand-lockup" onClick={()=>setScene('courtyard')} aria-label="Deepavali Verse home"><span className="brand-mark"><Flame size={20}/></span><span>DEEPAVALI <b>VERSE</b></span></button>
    <nav className="world-navigation" aria-label="Main navigation">
