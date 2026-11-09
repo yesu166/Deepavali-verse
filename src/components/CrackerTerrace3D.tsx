@@ -176,12 +176,13 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
 
   useEffect(()=>{
     const preview=previewRef.current
-    if(preview){preview.children.forEach(disposeTree);preview.clear();const ghost=model(selected);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.MeshStandardMaterial;o.material=source.clone();const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.72;material.depthWrite=false}});preview.add(ghost);preview.visible=placements.length===0}
+    if(preview){preview.children.forEach(disposeTree);preview.clear();const ghost=model(selected);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.MeshStandardMaterial;o.material=source.clone();const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.9;material.depthWrite=false}});preview.add(ghost);preview.visible=true;const root=host.current;if(root){root.dataset.previewVisible=String(preview.visible);root.dataset.previewMeshes=String(ghost.children.length);root.dataset.previewKind=selected}}
     const layer=layerRef.current;if(!layer)return
     layer.children.forEach(disposeTree);layer.clear();objectsRef.current.clear()
     for(const p of placements){
       const g=model(p.kind);g.position.set(p.x,.03,p.z);g.rotation.y=(p.id%7)*.27;g.userData.crackerId=p.id
       layer.add(g);objectsRef.current.set(p.id,g)
+      if(host.current)host.current.dataset.placedModels=String(layer.children.length)
     }
     if(sceneRef.current&&cameraRef.current&&rendererRef.current)rendererRef.current.render(sceneRef.current,cameraRef.current)
   },[placements,selected])
