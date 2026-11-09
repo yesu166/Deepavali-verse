@@ -102,7 +102,7 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
    for(const action of due){
     if(action.mode==='burst'){
      burst(action.x*width,action.y*height,action.hue,action.kind,config.current.pattern)
-     if(action.kind==='anar'||action.kind==='fountain'||action.kind==='chakri'||action.kind==='phooljhadi')soundEngine.play(action.kind==='fountain'?'anar':action.kind as 'anar'|'chakri'|'phooljhadi')
+     if(action.kind==='anar'||action.kind==='fountain'||action.kind==='flower-pot'||action.kind==='chakri'||action.kind==='phooljhadi'||action.kind==='sparkler')soundEngine.play(action.kind==='fountain'||action.kind==='flower-pot'?'anar':action.kind==='sparkler'?'phooljhadi':action.kind as 'anar'|'chakri'|'phooljhadi')
     }else launch(action.x,action.y,action.hue,action.kind)
    }
    rockets.current=rockets.current.filter(r=>{
