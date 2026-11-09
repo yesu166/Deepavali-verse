@@ -6,6 +6,7 @@ import { useVerseStore } from '../store/useVerseStore'
 import { ART } from '../assets'
 import FireworksCanvas, { type LaunchCommand } from './FireworksCanvas'
 import SoundControl from './SoundControl'
+import RocketCursor from './RocketCursor'
 const TerraceDepth = lazy(() => import('./TerraceDepth'))
 
 const destinations:{id:SceneId;title:string;subtitle:string;icon:typeof Flame;className:string;symbol:string}[]=[
@@ -27,7 +28,6 @@ export default function DeepavaliWorld(){
  const [showTools,setShowTools]=useState(true)
  const [hue,setHue]=useState(42)
  const [pattern,setPattern]=useState<'bloom'|'willow'|'comet'>('bloom')
- const [cursor,setCursor]=useState({x:-100,y:-100,visible:false})
  const fire=(kind:LaunchCommand['kind'],x=.53,y=.43)=>{
   setLaunchRequest(old=>({id:(old?.id??0)+1,kind,x,y,hue}))
   setPlacing(false)
@@ -46,7 +46,7 @@ export default function DeepavaliWorld(){
    <div className="foreground-vignette"/>
   </div>
   <Suspense fallback={null}><TerraceDepth/></Suspense>
-  <div className={'rocket-pointer '+(cursor.visible?'is-visible':'')} style={{left:cursor.x,top:cursor.y}} aria-hidden="true"><Rocket size={29} strokeWidth={1.7}/><span>CLICK TO LAUNCH</span></div>
+  <RocketCursor/>
   <FireworksCanvas active ambient interactive={false} placementMode={placing} onPlace={place} launchRequest={launchRequest} pattern={pattern}/>
   <header className="world-topbar terrace-topbar">
    <button className="brand-lockup" onClick={()=>setScene('courtyard')} aria-label="Deepavali Verse home"><span className="brand-mark"><Flame size={20}/></span><span>DEEPAVALI <b>VERSE</b></span></button>
