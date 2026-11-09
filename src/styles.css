@@ -882,61 +882,28 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 @media(prefers-reduced-motion:reduce){.mobile-verse-art{animation:none}.mobile-verse-destination{transition:none}}
 
 
-/* Rocket-pointer interaction for desktop. The cursor is decorative; launch uses the real canvas simulation. */
-@media(hover:hover) and (pointer:fine) and (min-width:761px){
- .terrace-world{cursor:none}
- .terrace-world button,.terrace-world a,.terrace-world input,.terrace-world select{cursor:pointer}
- .rocket-pointer{position:fixed;z-index:1000;pointer-events:none;display:flex;align-items:center;gap:8px;color:#ffe2a2;opacity:0;transform:translate(-35%,-50%) rotate(-42deg) scale(.72);transition:opacity .18s,transform .18s;filter:drop-shadow(0 0 9px rgba(255,185,79,.65))}
- .rocket-pointer.is-visible{opacity:1;transform:translate(-35%,-50%) rotate(-42deg) scale(1)}
- .rocket-pointer svg{padding:7px;width:43px;height:43px;border:1px solid rgba(255,215,145,.72);border-radius:50%;background:rgba(20,22,39,.86);box-shadow:0 0 0 4px rgba(236,181,91,.12),0 0 24px rgba(255,172,65,.28)}
- .rocket-pointer span{font-size:7px;letter-spacing:.14em;white-space:nowrap;transform:rotate(42deg);padding:5px 8px;border-radius:99px;background:rgba(15,20,36,.8);border:1px solid rgba(255,215,145,.24);color:#f4d5a0}
- .terrace-world:has(.rocket-pointer.is-visible){cursor:none}
-}
-@media(max-width:760px){
- .rocket-pointer{display:none}
- .mobile-verse-header{height:58px;padding:0 14px}
- .mobile-verse-hero{height:405px;min-height:405px;max-height:405px}
- .mobile-verse-art{object-position:50% 39%}
- .mobile-verse-art-grade{background:linear-gradient(180deg,rgba(5,10,24,.02),rgba(5,10,24,.04) 35%,rgba(5,10,24,.68) 100%),linear-gradient(90deg,rgba(5,10,24,.18),transparent 80%)}
- .mobile-verse-hero-copy{left:20px;right:20px;bottom:42px}
- .mobile-verse-eyebrow{font-size:8px;margin-bottom:12px}
- .mobile-verse-hero-copy h1{font-size:clamp(43px,11vw,54px);margin-bottom:11px;line-height:.9}
- .mobile-verse-hero-copy p{font-size:11px;line-height:1.45;max-width:290px}
- .mobile-verse-cta{min-height:43px;margin-top:15px;padding:0 18px;font-size:11px;gap:18px}
- .mobile-verse-art-caption{bottom:12px;font-size:6px}
- .mobile-verse-discover{padding:19px 13px 8px;margin-top:-1px}
- .mobile-verse-section-heading{margin:0 3px 11px}
- .mobile-verse-section-heading>div>span{font-size:7px}
- .mobile-verse-section-heading h2{font-size:24px;margin-top:4px}
- .mobile-verse-section-heading>svg{width:18px;height:18px}
- .mobile-verse-destinations{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
- .mobile-verse-destination{min-height:67px;padding:8px 9px;gap:8px;border-radius:11px}
- .mobile-verse-destination-number{right:7px;top:5px;font-size:6px}
- .mobile-verse-destination-icon{width:31px;height:31px;flex-basis:31px}
- .mobile-verse-destination-icon svg{width:18px;height:18px}
- .mobile-verse-destination-copy{gap:3px;padding-right:1px}
- .mobile-verse-destination-copy b{font-size:10px;line-height:1.1}
- .mobile-verse-destination-copy small{font-size:7px;line-height:1.2}
- .mobile-verse-destination-arrow{right:5px;bottom:4px}
- .mobile-verse-destination-arrow svg{width:12px;height:12px}
- .mobile-verse-trail{margin:13px 13px 0;padding:12px}
- .mobile-verse-trail-icon{width:34px;height:34px;flex-basis:34px}
- .mobile-verse-trail-content p{font-size:7px}
- .mobile-verse-footer{margin:16px 14px 0;font-size:6px}
- .mobile-verse-header-actions .sound-toggle span{display:none}
- .mobile-verse-header-actions .sound-toggle{width:36px;height:36px;justify-content:center;padding:0}
- .mobile-verse-header-actions .sound-more{width:31px;height:31px}
-}
-@media(max-width:380px){
- .mobile-verse-hero{height:390px;min-height:390px;max-height:390px}
- .mobile-verse-hero-copy h1{font-size:43px}
- .mobile-verse-destination{min-height:64px;padding:7px;gap:6px}
- .mobile-verse-destination-icon{width:28px;height:28px;flex-basis:28px}
- .mobile-verse-destination-copy b{font-size:9px}
-}
-
-
 /* Audio is the default festival experience. A quiet pulse only indicates the first-tap unlock. */
 .sound-toggle.sound-awaiting{border-color:rgba(245,209,132,.8);color:#ffe4a5;background:linear-gradient(135deg,rgba(194,133,59,.26),rgba(36,37,55,.78));animation:sound-ready-glint 2.8s ease-in-out infinite}
 @keyframes sound-ready-glint{0%,100%{box-shadow:0 0 0 rgba(230,174,81,0)}50%{box-shadow:0 0 17px rgba(230,174,81,.2)}}
 @media(prefers-reduced-motion:reduce){.sound-toggle.sound-awaiting{animation:none}}
+
+
+/* Guided yellow spark + slim rocket chaser. Native pointer is hidden only on desktop world view. */
+@media(hover:hover) and (pointer:fine) and (min-width:761px){
+ .terrace-world,.terrace-world *{cursor:none!important}
+ .cursor-light-dot,.cursor-chaser-rocket{position:fixed;left:0;top:0;pointer-events:none;opacity:0;z-index:1200;will-change:transform,opacity}
+ .cursor-light-dot{width:8px;height:8px;border-radius:50%;background:#fff3a0;box-shadow:0 0 0 3px rgba(255,216,95,.18),0 0 10px 4px rgba(255,211,64,.74),0 0 24px 8px rgba(255,172,42,.3);transition:opacity .16s}
+ .cursor-light-dot.is-visible,.cursor-chaser-rocket.is-visible{opacity:1}
+ .cursor-chaser-rocket{z-index:1199;width:30px;height:58px;transform-origin:50% 50%;filter:drop-shadow(0 3px 6px rgba(255,174,63,.36));transition:opacity .18s}
+ .cursor-chaser-rocket svg{display:block;overflow:visible;filter:drop-shadow(0 0 4px rgba(255,220,146,.45))}
+ .cursor-chaser-rocket svg path:nth-last-child(2){transform-origin:20px 47px;animation:rocket-flare .16s ease-in-out infinite alternate}
+ .cursor-chaser-rocket svg path:last-child{transform-origin:20px 47px;animation:rocket-flare .12s ease-in-out infinite alternate-reverse}
+ .rocket-chaser-trail{position:absolute;left:50%;top:47px;width:2px;height:20px;transform:translateX(-50%);border-radius:50%;background:linear-gradient(180deg,rgba(255,221,126,.55),rgba(255,159,61,0));filter:blur(1px);opacity:.8}
+ @keyframes rocket-flare{from{transform:scaleY(.78) scaleX(.82);opacity:.78}to{transform:scaleY(1.17) scaleX(1.12);opacity:1}}
+}
+@media(max-width:760px),(hover:none),(pointer:coarse){
+ .cursor-light-dot,.cursor-chaser-rocket{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .cursor-chaser-rocket svg path:nth-last-child(2),.cursor-chaser-rocket svg path:last-child{animation:none}
+}
