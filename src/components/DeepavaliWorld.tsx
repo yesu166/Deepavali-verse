@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, PartyPopper } from 'lucide-react'
+import { ArrowUpRight, Flower2, Flame, Gift, Heart, Maximize2, Rocket, PartyPopper, Target } from 'lucide-react'
 import type { SceneId } from '../store/useVerseStore'
 import { useVerseStore } from '../store/useVerseStore'
 import { ART } from '../assets'
