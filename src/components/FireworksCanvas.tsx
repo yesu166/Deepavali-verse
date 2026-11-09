@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { soundEngine } from '../lib/soundEngine'
 
-export type CrackKind='sky'|'volley'|'battery'|'fountain'|'anar'|'chakri'|'phooljhadi'|'ladi'
+export type CrackKind='sky'|'volley'|'battery'|'fountain'|'anar'|'chakri'|'phooljhadi'|'ladi'|'rocket'|'flower-pot'|'sparkler'|'bijili'|'atom-bomb'|'sutli-bomb'|'snake-pill'|'1000-wala'|'multi-shot'
 export type LaunchCommand={id:number;kind:CrackKind;hue?:number;x?:number;y?:number}
 type BurstKind=CrackKind
 type Particle={x:number;y:number;vx:number;vy:number;life:number;maxLife:number;hue:number;size:number;gravity:number;drag:number;twinkle:number}
@@ -54,15 +54,15 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
    ctx.setTransform(dpr,0,0,dpr,0,0)
   }
   const burst=(x:number,y:number,burstHue:number,kind:BurstKind,style:'bloom'|'willow'|'comet')=>{
-   const shape=kind==='fountain'||kind==='anar'||kind==='phooljhadi'?'fountain':kind==='chakri'?'chakri':kind==='ladi'?'pop':style==='willow'||kind==='battery'?'willow':style==='comet'?'comet':'bloom'
-   const count=kind==='ladi'?26:kind==='chakri'?88:kind==='anar'||kind==='fountain'?96:kind==='phooljhadi'?52:kind==='volley'?105:kind==='battery'?86:(mobile?76:126)
+   const shape=kind==='fountain'||kind==='anar'||kind==='flower-pot'?'fountain':kind==='phooljhadi'||kind==='sparkler'?'fountain':kind==='chakri'||kind==='snake-pill'?'chakri':kind==='ladi'||kind==='1000-wala'||kind==='bijili'?'pop':style==='willow'||kind==='battery'||kind==='multi-shot'?'willow':style==='comet'?'comet':'bloom'
+   const count=kind==='ladi'||kind==='1000-wala'?26:kind==='chakri'||kind==='snake-pill'?88:kind==='anar'||kind==='fountain'||kind==='flower-pot'?96:kind==='phooljhadi'||kind==='sparkler'?52:kind==='volley'?105:kind==='battery'||kind==='multi-shot'?110:kind==='atom-bomb'||kind==='sutli-bomb'?145:(mobile?76:126)
    for(let i=0;i<count&&particles.current.length<maxParticles;i++){
     const angle=shape==='fountain'?rand(-Math.PI*.94,-Math.PI*.06):shape==='pop'?rand(0,Math.PI*2):Math.PI*2*i/count+rand(-.055,.055)
-    const speed=shape==='fountain'?rand(kind==='phooljhadi'?1.1:1.7,kind==='phooljhadi'?3.2:4.8):shape==='chakri'?rand(1.1,2.8):shape==='pop'?rand(.7,2.2):shape==='willow'?rand(.7,2.5):shape==='comet'?rand(2.3,5.9):rand(1.5,4.9)
+    const speed=shape==='fountain'?rand(kind==='phooljhadi'||kind==='sparkler'?1.1:1.7,kind==='phooljhadi'||kind==='sparkler'?3.2:4.8):shape==='chakri'?rand(1.1,2.8):shape==='pop'?rand(.7,2.2):shape==='willow'?rand(.7,2.5):shape==='comet'?rand(2.3,5.9):rand(1.5,4.9)
     let vx=Math.cos(angle)*speed,vy=Math.sin(angle)*speed
     if(shape==='chakri'){vx+=-Math.sin(angle)*1.45;vy+=Math.cos(angle)*1.45}
-    const life=kind==='phooljhadi'?rand(22,49):kind==='ladi'?rand(18,38):shape==='willow'?rand(76,132):rand(47,100)
-    particles.current.push({x,y,vx,vy,life,maxLife:life,hue:burstHue+rand(-25,25),size:kind==='ladi'?rand(.9,1.7):rand(1.25,2.9),gravity:shape==='fountain'?.072:shape==='willow'?.062:.038,drag:shape==='willow'?.992:.988,twinkle:Math.random()*6})
+    const life=kind==='phooljhadi'||kind==='sparkler'?rand(22,49):kind==='ladi'||kind==='1000-wala'||kind==='bijili'?rand(18,38):shape==='willow'?rand(76,132):rand(47,100)
+    particles.current.push({x,y,vx,vy,life,maxLife:life,hue:burstHue+rand(-25,25),size:kind==='ladi'||kind==='1000-wala'?rand(.9,1.7):rand(1.25,2.9),gravity:shape==='fountain'?.072:shape==='willow'?.062:.038,drag:shape==='willow'?.992:.988,twinkle:Math.random()*6})
    }
   }
   const launch=(xRatio:number,yRatio:number,launchHue:number,kind:BurstKind)=>{
@@ -102,7 +102,7 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
    for(const action of due){
     if(action.mode==='burst'){
      burst(action.x*width,action.y*height,action.hue,action.kind,config.current.pattern)
-     if(action.kind==='anar'||action.kind==='fountain'||action.kind==='chakri'||action.kind==='phooljhadi')soundEngine.play(action.kind==='fountain'?'anar':action.kind)
+     if(action.kind==='anar'||action.kind==='fountain'||action.kind==='chakri'||action.kind==='phooljhadi')soundEngine.play(action.kind==='fountain'||action.kind==='flower-pot'?'anar':action.kind==='sparkler'?'phooljhadi':action.kind as 'anar'|'chakri'|'phooljhadi')
     }else launch(action.x,action.y,action.hue,action.kind)
    }
    rockets.current=rockets.current.filter(r=>{
@@ -116,7 +116,7 @@ export default function FireworksCanvas({active=true,interactive=true,ambient=fa
     if(dist<r.speed*dt+1){
      burst(r.tx,r.ty,r.hue,r.kind,r.style)
      if(r.kind==='ladi')soundEngine.play('ladi')
-     else soundEngine.play(r.kind==='anar'||r.kind==='fountain'?'anar':r.kind==='chakri'?'chakri':r.kind==='phooljhadi'?'phooljhadi':'burst')
+     else soundEngine.play(r.kind==='anar'||r.kind==='fountain'||r.kind==='flower-pot'?'anar':r.kind==='chakri'||r.kind==='snake-pill'?'chakri':r.kind==='phooljhadi'||r.kind==='sparkler'?'phooljhadi':r.kind==='ladi'||r.kind==='1000-wala'||r.kind==='bijili'?'ladi':'burst')
      return false
     }
     return true
