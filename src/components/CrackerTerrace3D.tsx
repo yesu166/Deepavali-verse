@@ -12,6 +12,21 @@ type Props = {
   onSky:(x:number,y:number)=>void
 }
 const mat=(color:number,metalness=.5,roughness=.32)=>new THREE.MeshStandardMaterial({color,metalness,roughness})
+function printedFoil(base:string,accent:string,highlight:string){
+  const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256
+  const c=canvas.getContext('2d')!
+  const grad=c.createLinearGradient(0,0,256,256);grad.addColorStop(0,highlight);grad.addColorStop(.28,base);grad.addColorStop(.72,base);grad.addColorStop(1,'#191b37')
+  c.fillStyle=grad;c.fillRect(0,0,256,256)
+  c.strokeStyle=accent;c.lineWidth=7;c.strokeRect(10,10,236,236)
+  c.lineWidth=2;c.strokeRect(19,19,218,218)
+  for(let y=32;y<240;y+=32){for(let x=32;x<240;x+=32){c.save();c.translate(x,y);c.rotate(Math.PI/4);c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(-7,-7,14,14);c.restore()}}
+  c.beginPath();c.arc(128,128,60,0,Math.PI*2);c.fillStyle=accent;c.globalAlpha=.2;c.fill();c.globalAlpha=1
+  for(let i=0;i<16;i++){const a=i*Math.PI/8;c.beginPath();c.moveTo(128+Math.cos(a)*34,128+Math.sin(a)*34);c.lineTo(128+Math.cos(a)*56,128+Math.sin(a)*56);c.strokeStyle=accent;c.lineWidth=3;c.stroke()}
+  c.beginPath();c.arc(128,128,28,0,Math.PI*2);c.strokeStyle=highlight;c.lineWidth=4;c.stroke()
+  c.beginPath();c.arc(128,128,12,0,Math.PI*2);c.fillStyle=highlight;c.fill()
+  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=4
+  return new THREE.MeshStandardMaterial({map:texture,metalness:.34,roughness:.38})
+}
 const mesh=(g:THREE.Group,geo:THREE.BufferGeometry,m:THREE.Material,x=0,y=0,z=0)=>{
   const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);g.add(o);return o
 }
@@ -26,7 +41,7 @@ function commonBase(g:THREE.Group,gold:THREE.Material){
 }
 function model(kind:IndianCracker):THREE.Group{
   const g=new THREE.Group()
-  const gold=mat(0xf5c76d,.78,.23),red=mat(0xc62945,.3,.36),green=mat(0x138c70,.42,.29),teal=mat(0x20a99a,.52,.25),blue=mat(0x2569b7,.58,.25),cream=mat(0xf5e4bc,.18,.3),dark=mat(0x252336,.38,.4),pink=mat(0xdc4d94,.45,.29)
+  const gold=mat(0xf5c76d,.78,.23),red=printedFoil('#a81d3c','#f8ca68','#e95c78'),green=printedFoil('#08765a','#f0c36a','#37bb91'),teal=printedFoil('#087f89','#f4ca75','#2cc8bb'),blue=printedFoil('#183b80','#f4cb70','#477ee4'),cream=mat(0xf5e4bc,.18,.3),dark=printedFoil('#211b39','#c3a0ee','#57417e'),pink=printedFoil('#9d2767','#ffe18e','#e466a8')
   commonBase(g,gold)
   if(kind==='rocket'){
     const body=cyl(g,.105,.14,.78,red,0,.57,0,16);body.rotation.z=-.07
@@ -99,6 +114,9 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     let renderer:THREE.WebGLRenderer
     try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:!mobile,powerPreference:'low-power'})}catch{return}
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,mobile?1:1.35))
+    renderer.outputColorSpace=THREE.SRGBColorSpace
+    renderer.toneMapping=THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure=1.12
     renderer.setSize(root.clientWidth,root.clientHeight);renderer.setClearColor(0,0)
     root.appendChild(renderer.domElement)
     const scene=new THREE.Scene();sceneRef.current=scene
