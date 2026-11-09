@@ -8,7 +8,7 @@ export default function RocketCursor() {
     if (!window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 761px)').matches) return
     let raf = 0, visible = false
     let x = -100, y = -100, rocketX = -136, rocketY = -100
-    let velocityX = 1, velocityY = 0, previousX = x, previousY = y, previousTime = 0, angle = 90
+    let velocityX = 1, velocityY = 0, previousX = x, previousY = y, previousTime = 0, angle = 90, hasPointer = false
     const show = () => {
       visible = true
       dotRef.current?.classList.add('is-visible')
@@ -24,9 +24,15 @@ export default function RocketCursor() {
     const move = (event: PointerEvent) => {
       if (event.pointerType === 'touch') return
       x = event.clientX; y = event.clientY
-      const dx = x - previousX, dy = y - previousY, distance = Math.hypot(dx, dy)
-      if (distance > .6) { const blend = Math.min(.42, .14 + distance * .012); velocityX += (dx - velocityX) * blend; velocityY += (dy - velocityY) * blend }
-      previousX = x; previousY = y
+      if (!hasPointer) {
+        hasPointer = true
+        rocketX = x - 38; rocketY = y + 10
+        previousX = x; previousY = y
+      } else {
+        const dx = x - previousX, dy = y - previousY, distance = Math.hypot(dx, dy)
+        if (distance > .6) { const blend = Math.min(.42, .14 + distance * .012); velocityX += (dx - velocityX) * blend; velocityY += (dy - velocityY) * blend }
+        previousX = x; previousY = y
+      }
       if (dotRef.current) dotRef.current.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-50%)'
       show()
     }
@@ -45,11 +51,11 @@ export default function RocketCursor() {
       if (rocketRef.current) rocketRef.current.style.transform = 'translate3d(' + rocketX + 'px,' + rocketY + 'px,0) translate(-50%,-50%) rotate(' + angle + 'deg)'
       raf = requestAnimationFrame(animate)
     }
-    window.addEventListener('pointermove', move, { passive: true })
-    window.addEventListener('pointerleave', hide)
+    document.addEventListener('pointermove', move, { passive: true, capture: true })
+    document.documentElement.addEventListener('pointerleave', hide)
     window.addEventListener('blur', hide)
     document.addEventListener('visibilitychange', hide)
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('pointermove', move); window.removeEventListener('pointerleave', hide); window.removeEventListener('blur', hide); document.removeEventListener('visibilitychange', hide) }
+    return () => { cancelAnimationFrame(raf); document.removeEventListener('pointermove', move, true); document.documentElement.removeEventListener('pointerleave', hide); window.removeEventListener('blur', hide); document.removeEventListener('visibilitychange', hide) }
   }, [])
   return <>
     <div ref={dotRef} className="cursor-light-dot" aria-hidden="true" />
