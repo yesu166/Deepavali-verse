@@ -13,6 +13,13 @@ A cinematic, interactive Deepavali world built with React, TypeScript, CSS, SVG 
 - **Lantern Ghat** — write and release a wish; wishes are saved locally.
 - **Greeting Pavilion** — personalised greeting cards, PNG download and WhatsApp sharing.
 
+## Interactive cracker terrace
+
+- Three.js 3D stage with a selected-product preview, floor placement, parallax camera response, and click-to-ignite placed models.
+- 12 custom procedural cracker models: Rocket, Flower Pot, Anar, Chakri, Phooljhadi/Sparkler, Ladi, Bijili, Atom Bomb, Sutli Bomb, Snake Tablet, 1000 Wala and Multi-shot Battery.
+- Each model uses individually generated geometry, ornamental foil textures, metallic trim, and a corresponding particle/sound burst. The models are original visual representations, not downloadable product photographs or manufacturer CAD files.
+- 3D rendering is lazy-loaded and disabled on the mobile landing page to preserve phone performance.
+
 ## Stack
 
 React 18 · TypeScript · Vite · Framer Motion · Zustand · Lucide · html-to-image
