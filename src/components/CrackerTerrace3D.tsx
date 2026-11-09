@@ -39,6 +39,19 @@ function commonBase(g:THREE.Group,gold:THREE.Material){
   shadow.rotation.x=-Math.PI/2
   ring(g,.43,.012,gold,0,.024,0)
 }
+function disposeTree(root:THREE.Object3D){
+  root.traverse(o=>{
+    if(o instanceof THREE.Mesh){
+      o.geometry.dispose()
+      const materials=Array.isArray(o.material)?o.material:[o.material]
+      materials.forEach(material=>{
+        const textured=material as THREE.MeshStandardMaterial
+        textured.map?.dispose()
+        material.dispose()
+      })
+    }
+  })
+}
 function model(kind:IndianCracker):THREE.Group{
   const g=new THREE.Group()
   const gold=mat(0xf5c76d,.78,.23),red=printedFoil('#a81d3c','#f8ca68','#e95c78'),green=printedFoil('#08765a','#f0c36a','#37bb91'),teal=printedFoil('#087f89','#f4ca75','#2cc8bb'),blue=printedFoil('#183b80','#f4cb70','#477ee4'),cream=mat(0xf5e4bc,.18,.3),dark=printedFoil('#211b39','#c3a0ee','#57417e'),pink=printedFoil('#9d2767','#ffe18e','#e466a8')
@@ -157,14 +170,14 @@ export default function CrackerTerrace3D({placements,placementMode,selected,onPl
     const animate=()=>{raf=requestAnimationFrame(animate);const t=clock.getElapsedTime();camera.position.x+=(targetX*.22-camera.position.x)*.025;camera.position.y+=(8.5+targetY*.1-camera.position.y)*.025;camera.lookAt(0,.15,0);for(const [id,g] of objectsRef.current){if(g.userData.kind==='chakri')g.rotation.y=t*1.35;g.position.y=.026+Math.sin(t*1.5+id)*.012}if(t-last>.025){renderer.render(scene,camera);last=t}}
     animate()
     const ro=new ResizeObserver(resize);ro.observe(root)
-    return()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);window.removeEventListener('resize',resize);for(const g of objectsRef.current.values())g.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const m=o.material;if(Array.isArray(m))m.forEach(x=>x.dispose());else m.dispose()}});scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const m=o.material;if(Array.isArray(m))m.forEach(x=>x.dispose());else m.dispose()}});renderer.dispose();renderer.domElement.remove();sceneRef.current=null;cameraRef.current=null;layerRef.current=null;previewRef.current=null;objectsRef.current.clear()}
+    return()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);window.removeEventListener('resize',resize);disposeTree(scene);renderer.dispose();renderer.domElement.remove();sceneRef.current=null;cameraRef.current=null;layerRef.current=null;previewRef.current=null;objectsRef.current.clear()}
   },[])
 
   useEffect(()=>{
     const preview=previewRef.current
-    if(preview){preview.clear();const ghost=model(selected);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.MeshStandardMaterial;o.material=source.clone();const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.72;material.depthWrite=false}});preview.add(ghost);preview.visible=placements.length===0}
+    if(preview){preview.children.forEach(disposeTree);preview.clear();const ghost=model(selected);ghost.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.MeshStandardMaterial;o.material=source.clone();const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.72;material.depthWrite=false}});preview.add(ghost);preview.visible=placements.length===0}
     const layer=layerRef.current;if(!layer)return
-    layer.clear();objectsRef.current.clear()
+    layer.children.forEach(disposeTree);layer.clear();objectsRef.current.clear()
     for(const p of placements){
       const g=model(p.kind);g.position.set(p.x,.03,p.z);g.rotation.y=(p.id%7)*.27;g.userData.crackerId=p.id
       layer.add(g);objectsRef.current.set(p.id,g)
